@@ -114,8 +114,8 @@ if [ $RUN_ENVIR = prod -o $RUN_ENVIR = devpara ] ; then
   fhp3=$((fh+$tspan)); [ $fhp3 -lt 10 ] && fhp3=0$fhp3; [ $fhp3 -lt 100 ] && fhp3=0$fhp3
   fh00=$fh;            [ $fh00 -lt 10 ] && fh00=0$fh00; [ $fh00 -lt 100 ] && fh00=0$fh00
   yyyymmdd=$(echo $FDATE|cut -c1-8); tzz=t$(echo $FDATE|cut -c9-10)z
-  hh=$(echo $FDATE|cut -c9-10)
-  COMLICF=$COM_INF/gfs.$yyyymmdd/$hh
+  zz=$(echo $FDATE|cut -c9-10)
+  COMLICF=$COM_INF/gfs.$yyyymmdd/$zz
   export sig1=$COMLICF/gfs.$tzz.atmf$fhm3.nemsio
   export sig2=$COMLICF/gfs.$tzz.atmf$fh00.nemsio
   export sig3=$COMLICF/gfs.$tzz.atmf$fhp3.nemsio
