@@ -14,17 +14,17 @@ C-----------------------------------------------------------------------
  
       CHARACTER*80 HDSTR,PSTR
       CHARACTER*8  SUBSET
-c
+
       real(8)    HDR(14)
       real(8)    POB(4)
 
-      real(8)    CNTO,CNTN,RAT1,RAT2,WT1,WT2 
-      real(8)    SPRS(NSTC,NREG,NSUB,NBAK)               
+      real(8)    CNTO,CNTN,RAT1,RAT2,WT1,WT2
+      real(8)    SPRS(NSTC,NREG,NSUB,NBAK)
       real(8)    STC(NSTC,NBAK)
 
       real(4)    GDATA(NREG,NSUB)
 
-      LOGICAL    REGION
+      LOGICAL      REGION
  
       DATA HDSTR
      ./'SID XOB YOB DHR ELV TYP T29 ITP SQN RQM DUP PRG SRC RUD'/
@@ -85,9 +85,24 @@ C
 C
 c... start forecast-loop
          DO IB=1,2
+C
+c  count
             STC(1,IB) = 1.
-            STC(2,IB) = pf-po
-            STC(3,IB) = (pf-po)**2
+c  f
+            if(ib.eq.1) STC(2,IB) = PF-fac
+            if(ib.eq.2) STC(2,IB) = PA-fac
+c  o
+            STC(3,IB) = PO-fac
+c  f * o
+            STC(4,IB) = STC(2,IB)*STC(3,IB)
+c  f**2
+            STC(5,IB) = STC(2,IB)**2
+c  o**2
+            STC(6,IB) = STC(3,IB)**2
+C
+         if(idbug.eq.1) print *,' ib ',ib,' stc ',(stc(k,ib),k=1,6)
+c
+c... end forecast-loop
          ENDDO
 c
       ENDIF
@@ -108,7 +123,7 @@ C
             wt1 = cnto/cntn
             wt2 = 1.-wt1
 c
-            DO I=2,3    
+            DO I=2,NSTC
 
             sprso = SPRS(I,LL,M,N)
             rat1 = wt1*SPRS(I,LL,M,N)
@@ -155,8 +170,11 @@ c
 c
       do isub=1,nsub
       do ireg=1,nreg
+      if((nst.eq.2).or.(nst.eq.3)) then
+      gdata(ireg,isub)=sprs(nst,ireg,isub,ibak)+fac
+      else
       gdata(ireg,isub)=sprs(nst,ireg,isub,ibak)
-      if(nst==3) gdata(ireg,isub)=sqrt(gdata(ireg,isub))
+      endif
       enddo
       enddo
 c

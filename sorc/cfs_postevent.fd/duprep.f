@@ -66,6 +66,7 @@ C  --------------------------------------------------------
  
       OPEN(LUBFI,FILE=FILI,FORM='UNFORMATTED')
       CALL UFBMEM(LUBFI,0,IRET,IUNIT)
+      CALL MAXOUT(20000)
  
 C  READ THE INFORMATION FOR DUP CHECKING AND THINNING
 C  --------------------------------------------------

@@ -22,15 +22,15 @@ C-----------------------------------------------------------------------
       real(8)    OBS(10,255),QMS(10,255)
 
       real(8)    SPRS(NSTC,NPLV,NVAR,NREG,NSUB,NBAK)
-      real(8)    CNTO,CNTN,RAT1,RAT2,WT1,WT2 
-      real(8)    PMAND(NPLV),PMID(NPLV)   
+      real(8)    CNTO,CNTN,RAT1,RAT2,WT1,WT2
+      real(8)    PMAND(NPLV),PMID(NPLV)
       real(8)    STC(NSTC,5,NBAK)
 
       real(4)    GDATA(NREG,NSUB)
 
       INTEGER    INDEXV(NVAR),LEVP(1200)
       LOGICAL    MANDONLY,REGION
- 
+
       DATA PMAND / 1000, 925, 850, 700, 500, 400, 300,
      .              250, 200, 150, 100,  70,  50,  30,
      .               20,  10,   7,   5,   3,   2,   1/
@@ -137,12 +137,18 @@ c
          IF(psq.LE.3 .and. psa.lt.1E10) THEN
 c
             STC(1,1,1) = 1.
-            STC(2,1,1) = psf-pso
-            STC(3,1,1) = (psf-pso)**2 
+            STC(2,1,1) = psf
+            STC(3,1,1) = pso
+            STC(4,1,1) = psf*pso
+            STC(5,1,1) = psf*psf
+            STC(6,1,1) = pso*pso
 c
             STC(1,1,2) = 1.
-            STC(2,1,2) = psa-pso
-            STC(3,1,2) = (psa-pso)**2
+            STC(2,1,2) = psa
+            STC(3,1,2) = pso
+            STC(4,1,2) = psa*pso
+            STC(5,1,2) = psa*psa
+            STC(6,1,2) = pso*pso
 c
 c... j  is level (21)
 c... k  is variable (5)
@@ -168,7 +174,7 @@ C
             wt1 = cnto/cntn
             wt2 = 1.-wt1
 c
-            DO I=2,3
+            DO I=2,6
 c
             sprso = SPRS(I,J,K,LL,M,N)
             rat1 = wt1*SPRS(I,J,K,LL,M,N)
@@ -237,66 +243,121 @@ c... start level-loop
       IF(PQM.LE.3) THEN
       J=LEVP(NINT(POB))
       IF(J.GT.0) THEN
-
+C
+c... start forecast-loop
          DO IB=1,2
+C
+c... start variable-loop
          DO IQ=2,5
-
-         IF(OBS(IQ,L)   >=BMISS) cycle ! protect from missing observation !
-         IF(BAK(IQ,L,IB)>=BMISS) cycle ! protect from missing background  !
-         IF(IQ.EQ.2) THEN ! save sph units g/kg
-            IF(IB.EQ.1) OBS(IQ,L)=OBS(IQ,L)*1.E-3
-            BAK(IQ,L,IB)=BAK(IQ,L,IB)*1.E-3
-         ENDIF
+c
+         IF(OBS(IQ,L)   >=BMISS) GO TO 2234 ! protect from missing observation !
+         IF(BAK(IQ,L,IB)>=BMISS) GO TO 2234 ! protect from missing background  !
          IR = IQ+1
-
+C
          IF(QMS(IQ,L).LE.3 .AND. IQ.LT.5 .AND. CAT.NE.4) THEN
+c
+            IF(IQ.EQ.2) THEN
+               IF(IB.EQ.1) OBS(IQ,L)=OBS(IQ,L)*1.E-3
+               BAK(IQ,L,IB)=BAK(IQ,L,IB)*1.E-3
+            ENDIF
+c  count
             STC(1,IQ,IB) = 1.
-            STC(2,IQ,IB) = BAK(IQ,L,IB)-OBS(IQ,L)
-            STC(3,IQ,IB) = (BAK(IQ,L,IB)-OBS(IQ,L))**2
+c  f
+            STC(2,IQ,IB) = BAK(IQ,L,IB)
+c  o
+            STC(3,IQ,IB) = OBS(IQ,L)
+c  f * o
+            STC(4,IQ,IB) = BAK(IQ,L,IB)*OBS(IQ,L)
+c  f**2
+            STC(5,IQ,IB) = BAK(IQ,L,IB)**2
+c  o**2
+            STC(6,IQ,IB) = OBS(IQ,L)**2
+C
          ELSEIF(QMS(IQ,L).LE.3 .AND. IQ.EQ.5) THEN
-            uob=OBS(IQ,L)
-            vob=OBS(IR,L)
-            ubk=BAK(IQ,L,IB)
-            vbk=BAK(IR,L,IB)
+c  count
             STC(1,IQ,IB) = 1.
-            STC(2,IQ,IB) = sqrt(ubk**2+vbk**2)-sqrt(uob**2+vob**2)
-            STC(3,IQ,IB) = (ubk-uob)**2+(vbk-vob)**2 
+c  uf
+            STC(2,IQ,IB) = BAK(IQ,L,IB)
+c  vf
+            STC(3,IQ,IB) = BAK(IR,L,IB)
+c  uo
+            STC(4,IQ,IB) = OBS(IQ,L)
+c  vo
+            STC(5,IQ,IB) = OBS(IR,L)
+c  uf*uo + vf*vo
+            STC(6,IQ,IB) = BAK(IQ,L,IB)*OBS(IQ,L)+BAK(IR,L,IB)*OBS(IR,L)
+c  uf**2 + vf**2
+            STC(7,IQ,IB) = BAK(IQ,L,IB)**2 + BAK(IR,L,IB)**2
+c  uo**2 + vo**2
+            STC(8,IQ,IB) = OBS(IQ,L)**2 + OBS(IR,L)**2
+c  sqrt (uf**2 + vf**2) - sqrt (uo**2 + vo**2)
+            STC(9,IQ,IB) = SQRT(STC(7,IQ,IB)) - SQRT(STC(8,IQ,IB))
+C
          ENDIF
-
+C
+         if(idbug.eq.1) then
+         if(j.eq.5) print *,' ib ',ib,' iq ',iq,' stc ',
+     *              (stc(k,iq,ib),k=1,3)
+         endif
+c
+ 2234    continue
+c
+c... end variable-loop
          ENDDO
+c... end forecast-loop
          ENDDO
-
-! accumulate counts, means, rms stats
  
          M = ITYP(SUBSET)
 
          if (M > 0) then
          DO N=1   ,NBAK
          DO LL=1  ,NREG
-
+C
          IF(REGION(XOB,YOB,LL)) THEN
-
+C
             DO K=2,NVAR
-
-            ! accumulate counts
+            nstat=6
+            if(k.eq.5) nstat=9
 
             cnto = SPRS(1,J,K,LL,M,N) 
             SPRS(1,J,K,LL,M,N) = SPRS(1,J,K,LL,M,N) + STC(1,K,N)
             cntn = SPRS(1,J,K,LL,M,N) 
 
-            ! accumulate running mean and rms
-
-            if(cntn.le.cnto) cycle 
+            if(cntn.gt.cnto) then
             wt1 = cnto/cntn
             wt2 = 1.-wt1
-            DO I=2,3           
+c
+            DO I=2,nstat
+c
+            sprso = SPRS(I,J,K,LL,M,N)
             rat1 = wt1*SPRS(I,J,K,LL,M,N)
             rat2 = wt2*STC(I,K,N)
+c
             SPRS(I,J,K,LL,M,N) = rat1 + rat2
+            sprsn = SPRS(I,J,K,LL,M,N)
+c
+            if((idbug.eq.1).and.(i.eq.2)) then
+            if((j.eq.5).and.(k.eq.2)) then
+            if((m.eq.1).and.(n.eq.1)) then
+            write(6,3000) ll,cnto,cntn,wt1,wt2,sprso,STC(I,K,N),
+     *      rat1,rat2,sprsn
+            endif
+            endif
+            endif
+c
+c... end stat-loop
             ENDDO
+c
+            endif
+
+c... end variable-loop
             ENDDO
+C
          ENDIF
+c... end region-loop
          ENDDO
+C
+c... end forecast-loop
          ENDDO
          endif     ! if itype > 0
 C
@@ -337,7 +398,6 @@ c
       do ireg=1,nreg
 c
       gdata(ireg,isub)=sprs(nst,iplv,ivar,ireg,isub,ibak)
-      if(nst==3) gdata(ireg,isub)=sqrt(gdata(ireg,isub))
 c
 c... end region-loop
       enddo

@@ -23,7 +23,7 @@ C-----------------------------------------------------------------------
       real(8)    OBS(10,255),QMS(10,255)
 
       real(8)    SPRS(NSTC,NPLV,NVAR,NREG,NSUB,NBAK)
-      real(8)    CNTO,CNTN,RAT1,RAT2,WT1,WT2 
+      real(8)    CNTO,CNTN,RAT1,RAT2,WT1,WT2
       real(8)    PMANDB(NPLV),PMANDT(NPLV)
       real(8)    STC(NSTC,5,NBAK)
 
@@ -31,6 +31,7 @@ C-----------------------------------------------------------------------
 
       LOGICAL    MANDONLY,REGION
       INTEGER    INDEXV(NVAR)
+
 
       DATA HDSTR
      ./'SID XOB YOB DHR ELV TYP T29 ITP SQN RQM DUP PRG SRC RUD'/
@@ -72,115 +73,180 @@ C  READ AND "SURU-FIT" THE PREPDA/BUFR RECORDS
 C  -------------------------------------------
  
 10    DO WHILE(IREADMG(LUBFR,SUBSET,IDATE).EQ.0)
-      IF(ITYP(SUBSET).EQ.0) cycle   
+c... check for subset...
+      IF(ITYP(SUBSET).EQ.0) GOTO 10
 11    DO WHILE(IREADSB(LUBFR).EQ.0)
+
+c... check for aircraft only...
       CALL UFBINT(LUBFR,HDR,14,  1,NLEV,HDSTR)
+c
+c... check for region...
       XOB=hdr(2)
       YOB=hdr(3)
-      IF(.NOT.REGION(XOB,YOB,0)) cycle   
+c
+      IF(.NOT.REGION(XOB,YOB,0)) GOTO 11
  
 C  READ THE DATA
 C  -------------
 C  GENERATE A PRESSURE LEVEL LOOKUP TABLE
-
       CALL UFBINT(LUBFR,OBS,10,255,NLEV,OBSTR)
       CALL UFBINT(LUBFR,BAK(1,1,1),10,255,NLFC,FCSTR)
       CALL UFBINT(LUBFR,BAK(1,1,2),10,255,NLAN,ANSTR)
       CALL UFBINT(LUBFR,QMS,10,255,NLQM,QMSTR)
+c
 
 C  CREATE AND ACCUMULATE THE STATISTICS ARRAY FOR EACH REALIZATION
 C  ---------------------------------------------------------------
  
+c... j  is level (21)
+c... k  is variable (5)
+c... ll is region (7)
+c... m  is subset (1)
+c... n  is background (2)
+c
       POB = OBS(1,1)
       PQM = QMS(1,1)
       CAT = QMS(6,1)
-
+C
       if(idbug.eq.1) print *,' pob ',pob,' pqm ',pqm,' cat ',cat
-
+c
+      if(pqm.le.3) then
       j=0
-      if(pqm>3) cycle  
       if((pob.le.levb1).and.(pob.gt.levt1)) j=1
       if((pob.le.levb2).and.(pob.gt.levt2)) j=2
       if((pob.le.levb3).and.(pob.gt.levt3)) j=3
-      if(j==0) cycle 
 
+      if(j.gt.0) then
 c
-C  CREATE AND ACCUMULATE THE STATISTICS ARRAY FOR EACH REALIZATION
-C  ---------------------------------------------------------------
-
-      DO L=1,1 !!NLEV !! single level data
       STC = 0.
+c... start forecast-loop
+         DO IB=1,2
+C
+c... start variable-loop
+         DO IQ=1,4
+c
+         IQQ = IQ+1
+         IR = IQQ+1
+C
+         IF(QMS(IQQ,1).LE.3 .AND. IQ.LE.3 .AND. CAT.NE.4) THEN
+c
+            IF(IQ.EQ.1) THEN
+            IF(OBS(IQQ,1).EQ.BMISS) GO TO 2234
+            IF(IB.EQ.1) OBS(IQQ,1)=OBS(IQQ,1)*1.E-3
+            IF(BAK(IQQ,1,IB).EQ.BMISS) GO TO 2234
+            BAK(IQQ,1,IB)=BAK(IQQ,1,IB)*1.E-3
+            ENDIF
+c  count
+            STC(1,IQ,IB) = 1.
+c  f
+            STC(2,IQ,IB) = BAK(IQQ,1,IB)
+c  o
+            STC(3,IQ,IB) = OBS(IQQ,1)
+c  f * o
+            STC(4,IQ,IB) = BAK(IQQ,1,IB)*OBS(IQQ,1)
+c  f**2
+            STC(5,IQ,IB) = BAK(IQQ,1,IB)**2
+c  o**2
+            STC(6,IQ,IB) = OBS(IQQ,1)**2
+C
+         ELSEIF(QMS(IQQ,1).LE.3 .AND. IQ.EQ.4) THEN
+c  count
+            STC(1,IQ,IB) = 1.
+c  uf
+            STC(2,IQ,IB) = BAK(IQQ,1,IB)
+c  vf
+            STC(3,IQ,IB) = BAK(IR,1,IB)
+c  uo
+            STC(4,IQ,IB) = OBS(IQQ,1)
+c  vo
+            STC(5,IQ,IB) = OBS(IR,1)
+c  uf*uo + vf*vo
+            STC(6,IQ,IB)=BAK(IQQ,1,IB)*OBS(IQQ,1)+BAK(IR,1,IB)*OBS(IR,1)
+c  uf**2 + vf**2
+            STC(7,IQ,IB) = BAK(IQQ,1,IB)**2 + BAK(IR,1,IB)**2
+c  uo**2 + vo**2
+            STC(8,IQ,IB) = OBS(IQQ,1)**2 + OBS(IR,1)**2
+c  sqrt (uf**2 + vf**2) - sqrt (uo**2 + vo**2)
+            STC(9,IQ,IB) = SQRT(STC(7,IQ,IB)) - SQRT(STC(8,IQ,IB))
+C
+         ENDIF
+C
+         if(idbug.eq.1) then
+         if(j.eq.3) print *,' ib ',ib,' iq ',iq,' stc ',
+     *              (stc(k,iq,ib),k=1,3)
+         endif
+c
+ 2234    continue
+c
+c... end variable-loop
+         ENDDO
+c... end forecast-loop
+         ENDDO
+ 
+         M = ITYP(SUBSET)
+ 
+         if (m > 0) then
+         DO N=1   ,NBAK
+         DO LL=1  ,NREG
+C
+         IF(REGION(XOB,YOB,LL)) THEN
+C
+            DO K=1,NVAR
+            nstat=6
+            if(k.eq.nvar) nstat=9
 
-      qms(4,l) = max(qms(3,l),qms(4,l)) ! use tqm for zqm
-      POB = OBS(1,L); PQM = QMS(1,L); if(pqm>3) cycle
-      CAT = QMS(6,L)
-      if(idbug.eq.1) print *,' pob ',pob,' pqm ',pqm,' cat ',cat
+c        print *,'j is ',j,' k is ',k,' ll is ',ll,' m is ',m,' n is ',n
+            cnto = SPRS(1,J,K,LL,M,N) 
+            SPRS(1,J,K,LL,M,N) = SPRS(1,J,K,LL,M,N) + STC(1,K,N)
+            cntn = SPRS(1,J,K,LL,M,N) 
 
-      DO IB=1,2    ! background field
-      DO IQ=1,NVAR !  vars q,t,z,w
-
-      IV=IQ+1; IR=IV+1
-
-      IF(OBS(IV,L)   >=BMISS) cycle ! protect from missing observation !
-      IF(BAK(IV,L,IB)>=BMISS) cycle ! protect from missing background  !
-      IF(IV.EQ.2) THEN
-         IF(IB.EQ.1) OBS(IV,L)=OBS(IV,L)*1.E-3
-         BAK(IV,L,IB)=BAK(IV,L,IB)*1.E-3
-      ENDIF
-      IF(QMS(IV,L).LE.3 .AND. IV.LT.5 .AND. CAT.NE.4) THEN
-         STC(1,IQ,IB) = 1.
-         STC(2,IQ,IB) = BAK(IV,L,IB)-OBS(IV,L)
-         STC(3,IQ,IB) = (BAK(IV,L,IB)-OBS(IV,L))**2
-      ELSEIF(QMS(IV,L).LE.3 .AND. IV.EQ.5) THEN
-         uob=OBS(IV,L)
-         vob=OBS(IR,L)
-         ubk=BAK(IV,L,IB)
-         vbk=BAK(IR,L,IB)
-         STC(1,IQ,IB) = 1.
-         STC(2,IQ,IB) = sqrt(ubk**2+vbk**2)-sqrt(uob**2+vob**2)
-         STC(3,IQ,IB) = (ubk-uob)**2+(vbk-vob)**2
-      ENDIF
-      ENDDO
-      ENDDO
-
-!  store the stats from this ob
-!    j  is level (21)
-!    k  is variable (5)
-!    ll is region (7)
-!    m  is subset (1)
-!    n  is background (2)
-
-
-      DO N=1   ,NBAK
-      DO M=1   ,1    
-      DO LL=1  ,NREG
-      IF(REGION(XOB,YOB,LL)) THEN
-         DO K=1,NVAR
-         cnto = SPRS(1,J,K,LL,M,N)
-         SPRS(1,J,K,LL,M,N) = SPRS(1,J,K,LL,M,N) + STC(1,K,N)
-         cntn = SPRS(1,J,K,LL,M,N)
-         if(cntn.gt.cnto) then
+            if(cntn.gt.cnto) then
             wt1 = cnto/cntn
             wt2 = 1.-wt1
-            DO I=2,3
+c
+            DO I=2,nstat
+c
             sprso = SPRS(I,J,K,LL,M,N)
             rat1 = wt1*SPRS(I,J,K,LL,M,N)
             rat2 = wt2*STC(I,K,N)
+c
             SPRS(I,J,K,LL,M,N) = rat1 + rat2
             sprsn = SPRS(I,J,K,LL,M,N)
+c
+            if((idbug.eq.1).and.(i.eq.2)) then
+            if((j.eq.4).and.(k.eq.2)) then
+            if((m.eq.1).and.(n.eq.1)) then
+            write(6,3000) ll,cnto,cntn,wt1,wt2,sprso,STC(I,K,N),
+     *      rat1,rat2,sprsn
+            endif
+            endif
+            endif
+c
+            ENDDO          ! ... end stat-loop
+c
+            endif
+
+c... end variable-loop
             ENDDO
-         endif
+C
+         ENDIF
+c... end region-loop
          ENDDO
+C
+c... end forecast-loop
+         ENDDO
+         endif     ! if itype > 0
+C
+c...  only if correct qc flag
       ENDIF
-! end region-typ-backg-level-loop
+c...  only if correct level
+      ENDIF
+ 
       ENDDO
+c... end subset-loop
       ENDDO
-      ENDDO
-      ENDDO
-! end ireadsb-ireadmg-loop
-      ENDDO
-      ENDDO
-      CALL CLOSBF(LUBFR)
+ 
+       CALL CLOSBF(LUBFR)
 
 C  FINISH UP
 C  ---------
@@ -189,26 +255,29 @@ C   write out grads data file...
       iw=50
       do ibak=1,nbak
       iw=iw+1
-
+c
       do ivarx=1,nvar
       ivar=indexv(ivarx)
       nstat=6
       if(ivar.eq.nvar) nstat=9
       if(idbug.eq.1) print *,ibak,' ivar ',ivar,' nstat ',nstat
-
+c
       do nst=1,nstat
+c
       do iplv=1,nplv
+c
       do isub=1,nsub
       do ireg=1,nreg
-
+c
       gdata(ireg,isub)=sprs(nst,iplv,ivar,ireg,isub,ibak)
-      if(nst==3) gdata(ireg,isub)=sqrt(gdata(ireg,isub))
-
+c
+c... end region-loop
       enddo
+c... end subset-loop
       enddo
-
+c
       write(iw) gdata
-
+c
       if(ipr.eq.1) then
       if(ibak.eq.1) then
       if(iplv.eq.1) then
@@ -225,22 +294,27 @@ C   write out grads data file...
       endif
       endif
       endif
-
+c
+c... end level-loop
       enddo
+c... end stat-loop
       enddo
+c
+c... end variable-loop
       enddo
-
+c
       close(iw)
+c... end forecast-loop
       enddo
-
+c
  1231  format('q fcs=',i2,2x,'stat = ',i2,2x,'lev = ',2i6,2x,7f12.2)
  1232  format('t fcs=',i2,2x,'stat = ',i2,2x,'lev = ',2i6,2x,7f12.2)
  1233  format('z fcs=',i2,2x,'stat = ',i2,2x,'lev = ',2i6,2x,7f12.2)
  1234  format('w fcs=',i2,2x,'stat = ',i2,2x,'lev = ',2i6,2x,7f12.2)
-
+c
  3000  format('reg ',i2,' cnto ',f4.0,' cntn ',f4.0,
      *        ' wt1 ',f5.2,' wt2 ',f5.2,2x,5f12.2)
-
+c
       PRINT'("SURUFIT PROCESSING COMPLETED")'
       STOP
       END

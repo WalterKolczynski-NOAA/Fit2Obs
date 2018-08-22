@@ -19,8 +19,9 @@ C-----------------------------------------------------------------------
       real(8)    BAK(10,255,NBAK)
       real(8)    OBS(10,255),QMS(10,255),vms(10,255)
 
+
       real(8)    SPRS(NSTC,NPLV,NVAR,NREG,NSUB,NBAK)
-      real(8)    CNTO,CNTN,RAT1,RAT2,WT1,WT2 
+      real(8)    CNTO,CNTN,RAT1,RAT2,WT1,WT2
       real(8)    STC(NSTC,5,NBAK)
 
       real(4)    GDATA(NREG,NSUB)
@@ -99,11 +100,17 @@ c... first surface pressure...
       psq =  psob(4)
       IF(psq.LE.3 .and. psa.lt.1E10) THEN
          STC(1,1,1) = 1.
-         STC(2,1,1) = psf-pso
-         STC(3,1,1) = (psf-pso)**2
+         STC(2,1,1) = psf
+         STC(3,1,1) = pso
+         STC(4,1,1) = psf*pso
+         STC(5,1,1) = psf*psf
+         STC(6,1,1) = pso*pso
          STC(1,1,2) = 1.
-         STC(2,1,2) = psa-pso
-         STC(3,1,2) = (psa-pso)**2
+         STC(2,1,2) = psa
+         STC(3,1,2) = pso
+         STC(4,1,2) = psa*pso
+         STC(5,1,2) = psa*psa
+         STC(6,1,2) = pso*pso
          J=1
          K=1
          DO N=1   ,NBAK
@@ -115,7 +122,7 @@ c... first surface pressure...
             if(cntn.gt.cnto) then
                wt1 = cnto/cntn
                wt2 = 1.-wt1
-               DO I=2,3
+               DO I=2,6
                sprso = SPRS(I,J,K,LL,M,N)
                rat1 = wt1*SPRS(I,J,K,LL,M,N)
                rat2 = wt2*STC(I,K,N)
@@ -171,22 +178,28 @@ C  ---------------------------------------------------------------
       DO IQ=2,5  ! vars q,t,z,w        
       IF(OBS(IQ,L)   >=BMISS) cycle ! protect from missing observation !
       IF(BAK(IQ,L,IB)>=BMISS) cycle ! protect from missing background  !
+      IR = IQ+1
       IF(QMS(IQ,L).LE.3 .AND. IQ.LT.5 .AND. CAT.NE.4) THEN
          IF(IQ.EQ.2) THEN
             IF(IB.EQ.1) OBS(IQ,L)=OBS(IQ,L)*1.E-3
             BAK(IQ,L,IB)=BAK(IQ,L,IB)*1.E-3
          ENDIF
-         STC(1,IQ,IB) = 1.
-         STC(2,IQ,IB) = BAK(IQ,L,IB)-OBS(IQ,L)
-         STC(3,IQ,IB) = (BAK(IQ,L,IB)-OBS(IQ,L))**2
+         STC(1,IQ,IB) = 1                            ! count
+         STC(2,IQ,IB) = BAK(IQ,L,IB)                 ! background
+         STC(3,IQ,IB) = OBS(IQ,L)                    ! observation
+         STC(4,IQ,IB) = BAK(IQ,L,IB)*OBS(IQ,L)       ! f*o
+         STC(5,IQ,IB) = BAK(IQ,L,IB)**2              ! f**2
+         STC(6,IQ,IB) = OBS(IQ,L)**2                 ! o**2
       ELSEIF(QMS(IQ,L).LE.3 .AND. IQ.EQ.5) THEN
-         uob=OBS(IQ,L)
-         vob=OBS(IQ+1,L)
-         ubk=(BAK(IQ,L,IB))
-         vbk=(BAK(IQ+1,L,IB))
-         STC(1,IQ,IB) = 1.
-         STC(2,IQ,IB) = sqrt(ubk**2+vbk**2)-sqrt(uob**2+vob**2)
-         STC(3,IQ,IB) = (ubk-uob)**2+(vbk-vob)**2
+         STC(1,IQ,IB) = 1                                              ! count
+         STC(2,IQ,IB) = BAK(IQ,L,IB)                                   ! u background
+         STC(3,IQ,IB) = BAK(IR,L,IB)                                   ! v background
+         STC(4,IQ,IB) = OBS(IQ,L)                                      ! u observation
+         STC(5,IQ,IB) = OBS(IR,L)                                      ! v observation
+         STC(6,IQ,IB) = BAK(IQ,L,IB)*OBS(IQ,L)+BAK(IR,L,IB)*OBS(IR,L)  ! uf*uo + vf*vo
+         STC(7,IQ,IB) = BAK(IQ,L,IB)**2 + BAK(IR,L,IB)**2              ! uf**2 + vf**2
+         STC(8,IQ,IB) = OBS(IQ,L)**2 + OBS(IR,L)**2                    ! uo**2 + vo**2
+         STC(9,IQ,IB) = SQRT(STC(7,IQ,IB)) - SQRT(STC(8,IQ,IB))        ! sqrt(uf**2+vf**2)-sqrt(uo**2+vo**2)
       endif
       ENDDO
       ENDDO
@@ -197,13 +210,15 @@ C  ---------------------------------------------------------------
       DO LL=1  ,NREG
       IF(REGION(XOB,YOB,LL)) THEN
          DO K=2,NVAR
+         nstat=6
+         if(k.eq.5) nstat=9
          cnto = SPRS(1,L,K,LL,M,N)
          SPRS(1,L,K,LL,M,N) = SPRS(1,L,K,LL,M,N) + STC(1,K,N)
          cntn = SPRS(1,L,K,LL,M,N)
          if(cntn.gt.cnto) then
             wt1 = cnto/cntn
             wt2 = 1.-wt1
-            DO I=2,3     
+            DO I=2,nstat
             sprso = SPRS(I,L,K,LL,M,N)
             rat1 = wt1*SPRS(I,L,K,LL,M,N)
             rat2 = wt2*STC(I,K,N)
@@ -245,7 +260,6 @@ c
       do ireg=1,nreg
 c
       gdata(ireg,isub)=sprs(nst,iplv,ivar,ireg,isub,ibak)
-      if(nst==3) gdata(ireg,isub)=sqrt(gdata(ireg,isub))
 c
 c... end region-loop
       enddo

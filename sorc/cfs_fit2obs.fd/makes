@@ -1,18 +1,16 @@
 #!/bin/sh
 set -aeu
 
-[ $# -ge 1 ] && plat=$1 || plat=none ; mkdir -p ../../exec
+[ $# -eq 1 ] && plat=$1 || plat=none ; mkdir -p ../../exec
 
 if [ $plat = jibb ]; then
  export LIBD=/home/jwoollen/lib
- export LIBS="-L$LIB4 -lw3_4 -lbufr_4_64"
+ export LIBS="-L$LIBD -lw3_4 -lbufr_4_64"
  export FLAGS="-O3 -g -traceback"
  export FCMP="ifort"
 elif [ $plat = wcoss ]; then
- export LIBD=/nwprod/lib
- export LIBS="$BUFR_LIBd -L$LIBD -lw3nco_d"
- export LIBS="$BUFR_LIB4 $W3NCO_LIB4      "
- export FLAGS="-O3 -g -traceback -r8 -i4"
+ export LIBS="$BUFR_LIB4 $W3NCO_LIB4"
+ export FLAGS="-O3 -g -traceback"
  export FCMP="ifort"
 elif [ $plat = gaea ]; then
  export LIBD=/lustre/f1/dev/ncep/Jack.Woollen/nwprod/lib
@@ -43,7 +41,7 @@ else
 fi
 
 for NAME in cfs_bufrslupao cfs_bufrslslev cfs_bufrslsfc cfs_sfc cfs_raob cfs_acft cfs_acar cfs_surf; do
- export NAME; echo $NAME
+ export $NAME
  make -f Makefile clean
  make -f Makefile
  make -f Makefile clean
