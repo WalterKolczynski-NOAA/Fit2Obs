@@ -35,7 +35,7 @@ mv diag_conv_ges.* diag_conv_ges
 #link the prepbufr input and run postevents
 
 export FORT20=$prepbufr; ln -sf $FORT20 fort.20
-$CNVDIAGEXEC ###>stdout 2>&1
+time $CNVDIAGEXEC ###>stdout 2>&1
 export err=$?; ##$DATA/err_chk
 
 #combine the postevents outp messages together

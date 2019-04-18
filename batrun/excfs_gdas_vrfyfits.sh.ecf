@@ -48,7 +48,7 @@ hh=$(echo $CDATE | cut -c9-10)
 yyyymmdd=$(echo $CDATE | cut -c1-8)
 
 if [ $RUN_ENVIR = prod -o $RUN_ENVIR = devpara ] ; then
-  COMLIC=$COM_INA/gdas.$yyyymmdd/$hh
+  COMLIC=$COM_INA
   export PRPI=$COMLIC/gdas.t${hh}z.prepbufr
   export PRPO=$COMLOX/gdas.t${hh}z.prepqa
   export PRPF=$COMLOX/gdas.t${hh}z.prepqf
@@ -68,12 +68,13 @@ else
   export HYBLEVS=${HYBLEVS:-$HOMEgfs/fix/fix_am/global_hyblev.l65.txt}
 fi
 
-[ ${ACPROFit:-NO} != NO ] && PRPI=$($USHcfs/ACprof)
+[ ${ACPROFit:-YES} != NO ] && PRPI=$($USHcfs/ACprof)
 
 $BUFRPOSTSH $sig1 $CNVS $PRPI $PRPO $CDATE
 
 [ "$CHGRP_RSTPROD" = 'YES' ] && chgrp rstprod $PRPO && chmod 640 $PRPO
 [ $SAVEPREP = YES          ] && cp $PRPO $ARCDIR/$(basename $PRPO).06.00
+[ $SAVEPREP = YES          ] && cp $PRPI $ARCDIR
 
 $FITSSH     $CDATE $PRPO $COMLOX $DATA 06 00           
 $HORZSH     $CDATE $PRPO $COMLOX $DATA anl 2> horizout
@@ -115,7 +116,7 @@ if [ $RUN_ENVIR = prod -o $RUN_ENVIR = devpara ] ; then
   fh00=$fh;            [ $fh00 -lt 10 ] && fh00=0$fh00; [ $fh00 -lt 100 ] && fh00=0$fh00
   yyyymmdd=$(echo $FDATE|cut -c1-8); tzz=t$(echo $FDATE|cut -c9-10)z
   zz=$(echo $FDATE|cut -c9-10)
-  COMLICF=$COM_INF/gfs.$yyyymmdd/$zz
+  COMLICF=$COM_INF
   export sig1=$COMLICF/gfs.$tzz.atmf$fhm3.nemsio
   export sig2=$COMLICF/gfs.$tzz.atmf$fh00.nemsio
   export sig3=$COMLICF/gfs.$tzz.atmf$fhp3.nemsio
