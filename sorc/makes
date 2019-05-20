@@ -1,4 +1,4 @@
-set -e
+set -u
 
 mkdir -p ../exec
 plat=${1}
@@ -53,7 +53,11 @@ fi
 
 module list
 
-for sorc in  cfs_fit2obs.fd  cfs_postevent.fd  cfs_prevmpi.fd  ndate.fd
+[[ $# = 2 ]] && dirs=$2           
+[[ $# = 2 ]] || dirs="cfs_fit2obs.fd  cfs_postevent.fd  cfs_prevmpi.fd  ndate.fd"
+echo $dirs
+
+for sorc in  $dirs  
 do
 echo; echo "-------------------------------- making $sorc on $plat --------------------------------"; echo
 (cd $sorc; ./makes $plat)      

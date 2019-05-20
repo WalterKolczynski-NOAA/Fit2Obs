@@ -116,6 +116,7 @@ C  ------------------------
       CALL CLOSBF(LUBFJ)
       OPEN(LUBFJ,FILE=FILO,FORM='UNFORMATTED')
       CALL OPENBF(LUBFJ,'OUT',LUBFI)
+      call maxout(20000)
       IREC = 1
  
       DO WHILE(IREADMM(IREC,SUBSET,IDATE).EQ.0)
