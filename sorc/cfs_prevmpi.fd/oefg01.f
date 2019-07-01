@@ -72,10 +72,10 @@ C  --------------------------------------
       OEFG01 = ((1.0 - DEL) * ERRS(KX,K1,IE)) + (DEL * ERRS(KX,K2,IE))
       OEFG01 = MAX(OEFG01,OEMIN)
 
-C  SET MISSING ERROR VALUE TO 10E10_8
-C  ----------------------------------
+C  SET MISSING ERROR VALUE TO 10E10
+C  --------------------------------
 
-      IF(OEFG01.GE.5E5) OEFG01 = 10E10_8
+      IF(OEFG01.GE.5E5) OEFG01 = 10E10
 
       RETURN
 

@@ -9,7 +9,7 @@
 ! dwork_ges
 
    program convdiag
-   parameter(maxn=1500000,mxtb=1500000,maxsub=49)
+   parameter(maxn=3500000,mxtb=1500000,maxsub=49)
 
    character(8),dimension(maxn) :: awork,cwork
    real(4),dimension(maxn,0:20) :: bwork,dwork
@@ -63,14 +63,21 @@
 
 !  sort the diag files enough ways to make them line up correctly 
 
-   call orders(0,iwork,awork,kord,nwrk,1,8,2)
-   call orders(0,iwork,cwork,jord,nwrk,1,8,2)
-   do i=0,8; if(i==5)cycle
-   call orders(12,iwork,bwork(1,i),kord,nwrk,1,4,2)
-   call orders(12,iwork,dwork(1,i),jord,nwrk,1,4,2)
-   enddo
-   call orders(10,iwork,awork,kord,nwrk,1,8,2)
-   call orders(10,iwork,cwork,jord,nwrk,1,8,2)
+   if(0==0) then
+      call orders(0,iwork,awork,kord,nwrk,1,8,2)
+      call orders(0,iwork,cwork,jord,nwrk,1,8,2)
+      do i=0,8; if(i==5)cycle
+      call orders(12,iwork,bwork(1,i),kord,nwrk,1,4,2)
+      call orders(12,iwork,dwork(1,i),jord,nwrk,1,4,2)
+      enddo
+      call orders(10,iwork,awork,kord,nwrk,1,8,2)
+      call orders(10,iwork,cwork,jord,nwrk,1,8,2)
+   else
+      do n=1,nwrk  
+      jord(n)=n
+      kord(n)=n
+      enddo
+   endif
 
 !  check to be sure both diag files are the same shape
 
@@ -84,6 +91,14 @@
    endif
    enddo 
    enddo
+
+!  open(6,recl=150)
+!  do n=1,100
+!  write(6,'(a8,13f10.2)') awork(n),bwork(n,0:12)
+!  write(6,'(a8,13f10.2)') cwork(n),dwork(n,0:12)
+!  print*
+!  enddo
+!  call bort('test')
 
 !  read in the prepbufr station ids
 
@@ -155,6 +170,8 @@
 !   if(typ==233 .and. abs(xob-xdw).le..001 .and. abs(yob-ydw).le..001 &
 !   .and. typ==tdw .and. edw==11874 .and. .not.match .and. sid=='T0QVVSRA') &
 !   print*,'debug',sid,xob,yob,elv,edw,dhr,typ,match
+
+    if(typ>=240.and.typ<=260) cycle ! skip satwinds
 
     if(typ==999 .and. abs(xob-xdw).le..001 .and. abs(yob-ydw).le..001 &
     .and. typ==tdw                      ) &

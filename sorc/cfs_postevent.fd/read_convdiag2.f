@@ -12,7 +12,7 @@
 
       character(8) sid; real(8) rid; equivalence(sid,rid)
       
-      parameter(maxn=1500000)
+      parameter(maxn=3500000)
       character(8),dimension(maxn) :: cwork
       real(4),dimension(maxn,0:20) :: dwork
 

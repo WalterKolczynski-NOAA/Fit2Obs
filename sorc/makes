@@ -45,6 +45,7 @@ elif [ $plat = dell ] ; then
  module load sfcio/1.0.0
  module load nemsio/2.2.3
  module load sp/2.0.2
+ module load NetCDF/4.5.0
 elif [ $plat = wcoss ] ; then
  module unload bufr w3nco
  module load bufr/v11.1.0

@@ -22,15 +22,27 @@ prepbufr=$PREP # prepbufr into new post is prepbufr out of old post
 export HOMEcfs=${HOMEcfs:-/nwprod}
 export cfss=${cfss:-/cfs}
 export cfsp=${cfsp:-cfs_}
-export CNVDIAGEXEC=${CNVDIAGEXEC:-$HOMEcfs/exec/${cfsp}post_convdiag}
 export DUPREPEXEC=${DUPREPEXEC:-$HOMEcfs/exec/${cfsp}duprep}
 export COMBFRSH=${COMBFRSH:-$HOMEcfs/ush/${cfsp}combfr.sh}
 
-# setup the convstat files
+# setup the convstat or convnetc files
+
+set -x
 
 tar -xvf $cnvstat; gunzip -v  diag_conv_*
-mv diag_conv_anl.* diag_conv_anl 
-mv diag_conv_ges.* diag_conv_ges 
+
+if [[ ${CONVNETC:-NO} = NO ]]; then
+   export CNVDIAGEXEC=$HOMEcfs/exec/${cfsp}post_convdiag
+   mv diag_conv_anl.* diag_conv_anl 
+   mv diag_conv_ges.* diag_conv_ges 
+else
+   export CNVDIAGEXEC=$HOMEcfs/exec/${cfsp}post_convnetc
+   for bak in ges anl  ; do
+   for var in ps q t uv; do
+   ln -sf diag_conv_${var}_${bak}.$CDATE.nc4  diag_conv_${bak}_${var}
+   [[ -s diag_conv_${var}_${bak}.$CDATE.nc4 ]] || exit 99
+   done; done
+fi
 
 #link the prepbufr input and run postevents
 
@@ -54,4 +66,4 @@ echo $preppost             >>dupinp
 echo $delxy $delhr $delelv >>dupinp
 cat dupinp|$DUPREPEXEC
 
-rm -f diag_conv_anl diag_conv_ges prep_w_dups fort.*
+rm -f diag_conv_anl_* diag_conv_ges_* prep_w_dups fort.*
