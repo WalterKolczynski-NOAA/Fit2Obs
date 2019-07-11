@@ -91,17 +91,17 @@
 
          if( trim(dtype) == 'uv') then
             call get_r(ncid,"u_Observation                    ",nobs,dwork(nn,15))           ! u observation
-            call get_r(ncid,"u_Obs_Minus_Forecast_unadjusted  ",nobs,dwork(nn,16))           ! u background or analysis
+            call get_r(ncid,"u_Obs_Minus_Forecast_adjusted    ",nobs,dwork(nn,16))           ! u background or analysis
             call get_r(ncid,"v_Observation                    ",nobs,dwork(nn,17))           ! v observation
-            call get_r(ncid,"v_Obs_Minus_Forecast_unadjusted  ",nobs,dwork(nn,18))           ! v background or analysis
+            call get_r(ncid,"v_Obs_Minus_Forecast_adjusted    ",nobs,dwork(nn,18))           ! v background or analysis
             !!dwork(nn,19)=rdiag(23,i)             ! 10m wind reduction factor
          else if( trim(dtype) == 'q') then
             call get_r(ncid,"Observation                      ",nobs,dwork(nn,15))           ! observation
-            call get_r(ncid,"Obs_Minus_Forecast_unadjusted    ",nobs,dwork(nn,16))           ! background or analysis
+            call get_r(ncid,"Obs_Minus_Forecast_adjusted      ",nobs,dwork(nn,16))           ! background or analysis
             call get_r(ncid,"Forecast_Saturation_Spec_Hum     ",nobs,dwork(nn,17))           ! guess saturation specific humidity
          else
             call get_r(ncid,"Observation                      ",nobs,dwork(nn,15))           ! observation
-            call get_r(ncid,"Obs_Minus_Forecast_unadjusted    ",nobs,dwork(nn,16))           ! background or analysis
+            call get_r(ncid,"Obs_Minus_Forecast_adjusted      ",nobs,dwork(nn,16))           ! background or analysis
          endif
 
          do n=1,nobs        

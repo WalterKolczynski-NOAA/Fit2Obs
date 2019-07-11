@@ -6,6 +6,9 @@ ACCOUNT=${ACCOUNT:-CFS-T2O}
 CUE2RUN=${CUE2RUN:-dev}
 KEEPDATA=${KEEPDATA:-NO}
 
+vday=$(echo $CDATE | cut -c1-8)
+vcyc=$(echo $CDATE | cut -c9-10)
+
 echo -------------------------------------------------------------------------------------------------------------------
 echo Starting the runfits for:
 echo -------------------------------------------------------------------------------------------------------------------
@@ -50,7 +53,7 @@ export KMP_AFFINITY=disabled
 export CDATE=$CDATE
 export EXP=$EXPNAM
 export COM_IN=$ROTDIR
-export COM_INA=$ROTDIR
+export COM_INA=$ROTDIR/gdas.$vday/$vcyc
 export COM_INF=$ROTDIR/vrfyarch
 export KEEPDATA=$KEEPDATA
 
