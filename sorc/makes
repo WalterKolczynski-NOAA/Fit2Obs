@@ -20,7 +20,7 @@ if [ $plat = cray ];then
  module load sfcio-intel/1.0.0  
  module load nemsio-intel/2.2.3 
  module load sp-intel/2.0.2     
-elif [ $plat = theia ]; then
+elif [ $plat = hera ]; then
  module load intel
  module use /scratch3/NCEPDEV/nwprod/lib/modulefiles
  module load sigio/v2.0.1
