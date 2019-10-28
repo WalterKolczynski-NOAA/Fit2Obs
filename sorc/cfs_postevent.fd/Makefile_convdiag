@@ -1,4 +1,4 @@
-SRCS=	read_convdiag3.f convdiag.f
+SRCS=	read_convdiag2.f convdiag.f
 OBJS=	read_convdiag3.o convdiag.o
 FC=	$(FCMP) -FR 
 CMD=	cfs_post_convdiag    
