@@ -231,14 +231,14 @@
        if(.not.gbak .and. .not.gana) then; qmout=10; rcout=1; else&
        if(.not.gbak .and.      gana) then; qmout=1 ; rcout=2; else&
        if(     gbak .and. .not.gana) then; qmout=10; rcout=3; endif
-!       if(gana)then
-!       if(.not.vbak .and. .not.vana) then; qmout=11; rcout=4; else&
-!       if(.not.vbak .and.      vana) then; qmout=1 ; rcout=5; else&
-!       if(     vbak .and. .not.vana) then; qmout=11; rcout=6; endif;endif
+       if(gana)then
+       if(.not.vbak .and. .not.vana) then; qmout=11; rcout=4; else&
+       if(.not.vbak .and.      vana) then; qmout=1 ; rcout=5; else&
+       if(     vbak .and. .not.vana) then; qmout=11; rcout=6; endif;endif
        if(rcout==0.and.oiqc) then; qmout=qmin-4; rcout=1; endif
        elseif(qmin.le.3    ) then; qmout=9     ; rcout=1; endif
 
-!       if(qmout<4.and.vca<.8) qmout=4 ! screen data <80% confidence from fits
+       if(qmout==11) qmout=1 ! keep data rejected by vqc but passed gross check
 
 ! compose any diagnose events for the prepbufr file
 
