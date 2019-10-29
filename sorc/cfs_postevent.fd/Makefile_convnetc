@@ -5,5 +5,5 @@ CMD=	cfs_post_convnetc
 
 all:	$(CMD)
 $(CMD):	$(SRCS)
-	$(FC)  -o $(@) $(SRCS) $(FFLAGS) $(LIBS)
+	$(FC)  -o $(@) $(SRCS) $(FFLAGS) $(NETS) $(LIBS)
 	mv $(CMD) ../../exec

@@ -33,7 +33,10 @@ elif [ $plat = cray  ]; then
  export FLAGS="-O3 -g -traceback"
  export FCMP="ftn"
 elif [ $plat = dell  ]; then
- export LIBS="$NETCDF_INCLUDE $NETCDF_LDFLAGS $W3EMC_LIB4 $W3NCO_LIB4 $BUFR_LIB4"
+ module load NetCDF/4.5.0
+ set -x
+ export LIBS="$W3EMC_LIB4 $W3NCO_LIB4 $BUFR_LIB4"
+ export NETS="$NETCDF_INCLUDE $NETCDF_LDFLAGS "
  export FFLAGS="-O3 -g -traceback"
  export FCMP="mpif90"
 else
