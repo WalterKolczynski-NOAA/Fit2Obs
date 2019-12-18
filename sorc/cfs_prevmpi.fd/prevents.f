@@ -115,7 +115,7 @@ C$$$
       character(80) filo
       CHARACTER(8)  SUBSET,LAST
 
-      DIMENSION IUNITG(2)
+      integer IUNITG
 
       DATA  LAST/'XXXXXXXX'/
 
@@ -137,8 +137,8 @@ C$$$
       endif
 
       IUNITI    = 11
-      IUNITG(1) = 12
-      IUNITG(2) = 13
+      IUNITG    = 12
+      IUNITG    = 13
       IUNITE    = 14
       IUNITD    = 15
       IUNITP    = 50             

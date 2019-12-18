@@ -28,12 +28,15 @@ export COMANL=${COMANL:-$COMROT}
 export COMLOX=${COMLOX:-$DATA}   
 export SAVEPREP=${SAVEPREP:-NO}
 
-[ $NEMS = YES ] && { sig=gfn; sfc=sfn; } || { sig=sig; sfc=sfc; }
+##[ $NEMS = YES ] && { sig=gfn; sfc=sfn; } || { sig=sig; sfc=sfc; }
 
 export PRVT=${PRVT:-$NWPROD/fix/prepobs_errtable.global}
 export PREX=$EXECcfs/cfs_prevmpi
 
 export CHGRP_RSTPROD=${CHGRP_RSTPROD:-YES}
+
+export HYBLEVS=${HYBLEVS:-/dev/null}
+export PREC=$DATA/prec; echo  "&PREVDATA doanls=t,fits=t /" >$PREC
 
 #################################################################
 
@@ -46,26 +49,25 @@ fh1=06
 fh2=00
 hh=$(echo $CDATE | cut -c9-10)
 yyyymmdd=$(echo $CDATE | cut -c1-8)
+COMLIC=$COM_INA
 
-if [ $RUN_ENVIR = prod -o $RUN_ENVIR = devpara ] ; then
-  COMLIC=$COM_INA
+if [[ $RUN_ENVIR = nemsio || $RUN_ENVIR = netcdf ]] ; then
+  [[ $RUN_ENVIR = nemsio ]] && suffix=nemsio || suffix=nc
   export PRPI=$COMLIC/gdas.t${hh}z.prepbufr
   export PRPO=$COMLOX/gdas.t${hh}z.prepqa
   export PRPF=$COMLOX/gdas.t${hh}z.prepqf
-  export sig1=$COMLIC/gdas.t${hh}z.atmanl.nemsio
-  export sfc1=$COMLIC/gdas.t${hh}z.atmanl.nemsio
+  export sig1=$COMLIC/gdas.t${hh}z.atmanl.$suffix
+  export sfc1=$COMLIC/gdas.t${hh}z.atmanl.$suffix
   export CNVS=$COMLIC/gdas.t${hh}z.cnvstat
-  export PREC=$DATA/prec; echo  "&PREVDATA doanls=t,fits=t /" >$PREC
-  export HYBLEVS=${HYBLEVS:-$HOMEgfs/fix/fix_am/global_hyblev.l65.txt}
-else
-  export PRPI=$COMANL/prepqc.$CDUMPPREP.$CDATE
+elif [[ $RUN_ENVIR = cfs ]]; then
+  export PRPI=$COMLIC/prepqc.$CDUMPPREP.$CDATE
   export PRPO=$COMLOX/prepqa.$CDUMPPREP.$CDATE
   export PRPF=$COMLOX/prepqf.$CDUMPPREP.$CDATE
-  export sig1=$COMANL/${sig}anl.$CDUMPANAL.$CDATE
-  export sfc1=$COMANL/${sfc}anl.$CDUMPANAL.$CDATE
-  export CNVS=$COMANL/cnvstat.$CDUMPPREP.$CDATE
-  export PREC=$DATA/PREC; echo  "&PREVDATA doanls=t,fits=t /" >$PREC
-  export HYBLEVS=${HYBLEVS:-$HOMEgfs/fix/fix_am/global_hyblev.l65.txt}
+  export sig1=$COMLIC/siganl.$CDUMPANAL.$CDATE
+  export sfc1=$COMLIC/sfcanl.$CDUMPANAL.$CDATE
+  export CNVS=$COMLIC/cnvstat.$CDUMPPREP.$CDATE
+else 
+  echo $RUN_ENVIR = unknown RUN_ENVIR; exit 999 
 fi
 
 [ ${ACPROFit:-YES} != NO ] && PRPI=$($USHcfs/ACprof)
@@ -110,29 +112,32 @@ do
 [ $fh = xx ] && continue
 
 FDATE=$($NDATE -$fh $CDATE)
-if [ $RUN_ENVIR = prod -o $RUN_ENVIR = devpara ] ; then
+if [[ $RUN_ENVIR = nemsio || $RUN_ENVIR = netcdf ]] ; then
   fhm3=$((fh-$tspan)); [ $fhm3 -lt 10 ] && fhm3=0$fhm3; [ $fhm3 -lt 100 ] && fhm3=0$fhm3
   fhp3=$((fh+$tspan)); [ $fhp3 -lt 10 ] && fhp3=0$fhp3; [ $fhp3 -lt 100 ] && fhp3=0$fhp3
   fh00=$fh;            [ $fh00 -lt 10 ] && fh00=0$fh00; [ $fh00 -lt 100 ] && fh00=0$fh00
   yyyymmdd=$(echo $FDATE|cut -c1-8); tzz=t$(echo $FDATE|cut -c9-10)z
   zz=$(echo $FDATE|cut -c9-10)
   COMLICF=$COM_INF/gfs.$yyyymmdd/$zz
-
-  export sig1=$COMLICF/gfs.$tzz.atmf$fhm3.nemsio
-  export sig2=$COMLICF/gfs.$tzz.atmf$fh00.nemsio
-  export sig3=$COMLICF/gfs.$tzz.atmf$fhp3.nemsio
-  export sfc1=$COMLICF/gfs.$tzz.atmf$fhm3.nemsio
-  export sfc2=$COMLICF/gfs.$tzz.atmf$fh00.nemsio
-  export sfc3=$COMLICF/gfs.$tzz.atmf$fhp3.nemsio
-else
+  [[ $RUN_ENVIR = nemsio ]] && suffix=nemsio || suffix=nc
+  export sig1=$COMLICF/gfs.$tzz.atmf$fhm3.$suffix  
+  export sig2=$COMLICF/gfs.$tzz.atmf$fh00.$suffix
+  export sig3=$COMLICF/gfs.$tzz.atmf$fhp3.$suffix
+  export sfc1=$COMLICF/gfs.$tzz.atmf$fhm3.$suffix
+  export sfc2=$COMLICF/gfs.$tzz.atmf$fh00.$suffix
+  export sfc3=$COMLICF/gfs.$tzz.atmf$fhp3.$suffix
+elif [[ $RUN_ENVIR = cfs ]]; then
   fhm3=$((fh-$tspan)); [ $fhm3 -lt 10 ] && fhm3=0$fhm3
   fhp3=$((fh+$tspan)); fh00=$fh          
+  COMLICF=$COM_INF/cfs.$yyyymmdd/$zz/m01
   export sig1=$COMLOC/${sig}f${fhm3}.$CDUMPFCST.$FDATE 
   export sig2=$COMLOC/${sig}f${fh00}.$CDUMPFCST.$FDATE 
   export sig3=$COMLOC/${sig}f${fhp3}.$CDUMPFCST.$FDATE 
   export sfc1=$COMLOC/${sfc}f${fhm3}.$CDUMPFCST.$FDATE 
   export sfc2=$COMLOC/${sfc}f${fh00}.$CDUMPFCST.$FDATE 
   export sfc3=$COMLOC/${sfc}f${fhp3}.$CDUMPFCST.$FDATE 
+else 
+  echo $RUN_ENVIR = unknown RUN_ENVIR; exit 999 
 fi
 
 if [ -s $sig1 -a -s $sig2 -a -s $sig3 ] ; then 

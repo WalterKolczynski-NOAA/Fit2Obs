@@ -1,36 +1,6 @@
-C***********************************************************************
-C***********************************************************************
-      SUBROUTINE SELECTFILE(IUNITF,INPTYP)
-      USE GBLEVN_MODULE
-      USE SIGIO_MODULE
-      USE SIGIO_R_MODULE
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
 
-      IMPLICIT NONE
-
-      INTEGER*4 IRET,IRET1,IUNIT
-      TYPE(SIGIO_HEAD) :: HEAD
-      CHARACTER*20 CFILE
-
-      INTEGER IUNITF, INPTYP
-
-      IUNIT = IUNITF
-      INPTYP = 1
-         WRITE(CFILE,'("fort.",I2.2)') IUNITF
-
-         CALL SIGIO_RROPEN(IUNIT,CFILE,IRET)
-         print *,'HLW IRET=', IRET
-         CALL SIGIO_RRHEAD(IUNIT,HEAD,IRET1)
-         print *,'HLW cfile=',cfile,'sig openrrhead,iret=',IRET,IRET1  !HL
-
-       IF(IRET1.NE.0) THEN
-          INPTYP = 2
-       ENDIF
-
-      RETURN
-
-      END
-C***********************************************************************
-C***********************************************************************
       SUBROUTINE GBLEVN10nems(IUNITF,IDATEP,IM,JM,kbak) 
                                                     
       USE GBLEVN_MODULE
@@ -43,7 +13,7 @@ C***********************************************************************
 
 
       IMPLICIT NONE
-      INTEGER IUNITF(2), IDATEP, IM, JM, kbak
+      INTEGER IUNITF, IDATEP, IM, JM, kbak
       REAL, PARAMETER :: PI180 = .0174532
       REAL, PARAMETER :: ROG   = 29.261
       REAL, PARAMETER :: tzero = 273.15
@@ -69,8 +39,8 @@ C***********************************************************************
 
       TYPE(NEMSIO_GFILE)  :: GFILE
 
-C***********************************************************************
-C***********************************************************************
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
 
       IMAX  = IM
       JMAX  = JM
@@ -80,7 +50,7 @@ C  -----------------------------------------------------------------
 !
       CALL NEMSIO_INIT(NRET)     !HL
 
-      WRITE(CFILE,'("fort.",I2.2)') IUNITF(1)
+      WRITE(CFILE,'("fort.",I2.2)') IUNITF
 
       print *,' cfile=',cfile
 

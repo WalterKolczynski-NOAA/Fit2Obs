@@ -433,7 +433,7 @@ C$$$
       !!INTEGER, PARAMETER :: IM=1152, JM=IM/2+1           ! im==384,768,1152
       !!INTEGER, PARAMETER :: IM=1536, JM=IM/2+1           ! im==384,768,1152
       !!INTEGER, PARAMETER :: IM=1760, JM=880              ! im==384,768,1152
-        INTEGER, PARAMETER :: IM=0000, JM=000              ! gets latb,lonb from the sigma files
+        INTEGER            :: IM=0000, JM=000              ! gets latb,lonb from the sigma files
 
       CHARACTER*255 parm 
       CHARACTER*80 HEADR,OBSTR,QMSTR,FCSTR,OESTR,ANSTR
@@ -442,7 +442,7 @@ C$$$
       LOGICAL      DOVTMP,DOFCST,SOME_FCST,DOBERR,FCST,VIRT,DOANLS,
      $             SATMQC,ADPUPA_VIRT
 
-      DIMENSION    IUNITF(2)
+      INTEGER      IUNITF
 
       COMMON /GBEVAA/ SID,OBS(15,255),QMS(12,255),BAK(12,255),XOB,
      $ YOB,DHR,TYP,NLEV
@@ -578,8 +578,9 @@ C  ------------------------------------------------------------------
 
          IF(DOFCST .OR. SOME_FCST .OR. DOANLS) then
 
+            iunitf=20
             CALL SELECTFILE(IUNITF,INPTYP)
-            rsfc=(rsfc.and.inptyp/=2)
+            rsfc=(rsfc.and.inptyp==1)
 
             DO KBAK=1,NBAK
             if(kbak==myid+1) then
@@ -589,6 +590,7 @@ C  ------------------------------------------------------------------
                if(kbak==4) idatec=idatep
                if(inptyp==1) CALL GBLEVN10(IUNITF,IDATEC,IM,JM,kbak)
                if(inptyp==2) CALL GBLEVN10nems(IUNITF,IDATEC,IM,JM,kbak)
+               if(inptyp==3) CALL GBLEVN10netc(IUNITF,IDATEC,IM,JM,kbak)
                if(myid==0  ) call prttime('gblevn10')
                if(inptyp==1) CALL GBLEVN12(KBAK) ! copies one background time level to hterpt arrays
                if(myid==0  ) call prttime('gblevn12')

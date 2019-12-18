@@ -44,6 +44,7 @@ elif [ $plat = dell ] ; then
  module load w3nco/2.0.6
  module load sfcio/1.0.0
  module load nemsio/2.2.3
+ module load NetCDF/4.5.0 
  module load sp/2.0.2
 elif [ $plat = wcoss ] ; then
  module unload bufr w3nco
