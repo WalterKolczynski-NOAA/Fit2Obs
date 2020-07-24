@@ -30,7 +30,7 @@ vrfytmpdiris=$TMPDIR
 unset TMPDIR
 
 cat<<EOF | bsub 
-#!/bin/bash --login
+#!/bin/bash
 #BSUB -o $COMDAY/fit2obs.log
 #BSUB -J FITS.$EXPNAM.$CDATE
 #BSUB -P $ACCOUNT       
@@ -42,8 +42,17 @@ cat<<EOF | bsub
 
 set -euax
 
-. $MODULESHOME/init/bash  2>/dev/null
-module load lsf/10.1      2>/dev/null
+set +x
+module purge
+module load EnvVars/1.0.2
+module load lsf/10.1
+module load ips/18.0.1.163
+module load impi/18.0.1
+module load prod_util/1.1.0
+module load prod_envir/1.0.2
+module load NetCDF/4.5.0
+module list
+set -x
 
 
 export OMP_NUM_THREADS=${FITOMP:-1}
@@ -52,10 +61,14 @@ export KMP_AFFINITY=disabled
 
 export CDATE=$CDATE
 export EXP=$EXPNAM
+export COMPONENT=${COMPONENT:-atmos}
 export COM_IN=$ROTDIR
-export COM_INA=$ROTDIR/gdas.$vday/$vcyc
+export COM_INA=$ROTDIR/gdas.$vday/$vcyc/$COMPONENT
 export COM_INF=$ROTDIR/vrfyarch
 export KEEPDATA=$KEEPDATA
+
+export RUN_ENVIR=$RUN_ENVIR
+export CONVNETC=$CONVNETC
 
 export fitdir=$fitdir
 export ARCDIR=$ARCDIR
