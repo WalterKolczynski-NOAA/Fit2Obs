@@ -1,7 +1,7 @@
+#!/usr/bin/env bash
 set -u
 
-mkdir -p ../exec
-plat=${1}
+plat=$1; mkdir -p ../exec
 
 if [ $# -lt 1 ]; then
     echo '***ERROR*** must specify machine'
@@ -20,10 +20,11 @@ if [ $plat = cray ];then
  module load sfcio-intel/1.0.0  
  module load nemsio-intel/2.2.3 
  module load sp-intel/2.0.2     
+ export FLAGS="-O3 -g -traceback"
+ export FCMP="ftn"
 elif [ $plat = hera ]; then
  module load intel/18.0.5.274
  module load impi/2018.0.4
- #module load netcdf/4.6.1
  module use /scratch2/NCEPDEV/nwprod/NCEPLIBS/modulefiles
  module load hdf5_parallel/1.10.6
  module load netcdf_parallel/4.7.4
@@ -35,6 +36,8 @@ elif [ $plat = hera ]; then
  module load sp/2.0.3
  module load w3emc/2.3.1
  module load w3nco/2.0.7
+ export FLAGS="-O3 -g -traceback"
+ export FCMP="mpiifort"
 elif [ $plat = dell ] ; then
  module purge
  module load EnvVars/1.0.2
@@ -50,10 +53,28 @@ elif [ $plat = dell ] ; then
  module load nemsio/2.2.3
  module load NetCDF/4.5.0 
  module load sp/2.0.2
-elif [ $plat = wcoss ] ; then
- module unload bufr w3nco
- module load bufr/v11.1.0
  module load w3nco 
+ export FLAGS="-O3 -g -traceback"
+ export FCMP="mpiifort"
+elif [ $plat = orion ]; then
+ module load intel/2018.4
+ module load impi/2018.4
+ module use  /apps/contrib/NCEPLIBS/orion/modulefiles
+ module load hdf5_parallel/1.10.6
+ module load netcdf_parallel/4.7.4
+ module load sigio/2.2.0
+ module load bufr/11.3.0
+ module load bacio/2.2.0
+ module load w3emc/2.5.0
+ module load w3nco/2.1.0
+ module load sfcio/1.2.0
+ module load nemsio/2.3.0
+ module load sp/2.1.0
+ export FLAGS="-O3 -g -traceback"
+ export FCMP="mpiifort"
+else
+ echo no recognised platform
+ exit 99
 fi
 
 module list
