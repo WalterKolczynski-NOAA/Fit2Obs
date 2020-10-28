@@ -1,0 +1,26 @@
+set -euax
+
+export date=$1
+
+export day=$(echo $date|cut -c 1-8)
+export our=$(echo $date|cut -c 9-10)
+
+export CUE2RUN=dev
+
+export ACCOUNT=CFS-T2O
+
+export COMDAY=$PWD/outputs; mkdir -p $COMDAY
+
+export COM_INA='/work/noaa/da/jwoollen/v15ics'
+export COM_INF='/dev/null'  
+
+export RUN_ENVIR=nemsio 
+export CONVNETC=NO 
+
+export HYBLEVS=$PWD/global_hyblev.l65.txt
+
+export FITDIR=$(dirname $PWD)
+
+$PWD/subfits_orio v15 $date          
+
+

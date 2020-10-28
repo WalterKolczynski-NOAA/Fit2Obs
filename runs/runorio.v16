@@ -1,0 +1,24 @@
+set -eua
+
+export date=$1
+
+export day=$(echo $date|cut -c 1-8)
+export our=$(echo $date|cut -c 9-10)
+
+export CUE2RUN=dev
+
+export ACCOUNT=CFS-T2O
+
+export COMDAY=$PWD/outputs; mkdir -p $COMDAY
+
+export COM_INA='/work/noaa/da/jwoollen/ics'
+export COM_INF='/dev/null'  
+
+export RUN_ENVIR=netcdf 
+export CONVNETC=YES
+
+export FITDIR=..  
+
+$PWD/subfits_orio v16rt2 $date          
+
+
