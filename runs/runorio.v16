@@ -17,7 +17,7 @@ export COM_INF='/dev/null'
 export RUN_ENVIR=netcdf 
 export CONVNETC=YES
 
-export FITDIR=..  
+export FITDIR=$(dirname $PWD)
 
 $PWD/subfits_orio v16rt2 $date          
 
