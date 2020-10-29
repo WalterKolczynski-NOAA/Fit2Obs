@@ -57,6 +57,7 @@ elif [ $plat = dell ] ; then
  export FLAGS="-O3 -g -traceback"
  export FCMP="mpiifort"
 elif [ $plat = orion ]; then
+ module purge
  module load intel/2020.2
  module load impi/2020.2
  module load netcdf/4.7.4
