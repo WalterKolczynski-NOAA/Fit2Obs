@@ -32,8 +32,6 @@ C-----------------------------------------------------------------------
  
       bmiss=10e10; call setbmiss(bmiss) ! this sets bufrlib missing value to 10e10
 
-      call maxout(20000) ! to match previous processing
-
 C  READ I/O FILENAMES AND ANY OVERRIDE VALUES FOR THINNING PARAMETERS
 C  ------------------------------------------------------------------
 C     DEFAULT PARAMETERS:
@@ -66,7 +64,6 @@ C  --------------------------------------------------------
  
       OPEN(LUBFI,FILE=FILI,FORM='UNFORMATTED')
       CALL UFBMEM(LUBFI,0,IRET,IUNIT)
-      CALL MAXOUT(20000)
  
 C  READ THE INFORMATION FOR DUP CHECKING AND THINNING
 C  --------------------------------------------------

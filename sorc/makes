@@ -40,7 +40,7 @@ elif [ $plat = hera ]; then
  export FCMP="mpiifort"
 elif [ $plat = dell ] ; then
  module purge
- module load EnvVars/1.0.2
+ module load EnvVars/1.0.3
  module load lsf/10.1
  module load ips/18.0.1.163
  module load impi/18.0.1
@@ -53,7 +53,6 @@ elif [ $plat = dell ] ; then
  module load nemsio/2.2.3
  module load NetCDF/4.5.0 
  module load sp/2.0.2
- module load w3nco 
  export FLAGS="-O3 -g -traceback"
  export FCMP="mpiifort"
 elif [ $plat = orion ]; then

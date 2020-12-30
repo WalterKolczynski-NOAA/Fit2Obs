@@ -26,12 +26,13 @@ export CNVDIAGEXEC=${CNVDIAGEXEC:-$EXECcfs/${cfsp}post_convdiag}
 export COMLOC=${COMLOC:-$COMROT}
 export COMANL=${COMANL:-$COMROT}
 export COMLOX=${COMLOX:-$DATA}   
+export COMOUT=${COMOUT:-$DATA}   
 export SAVEPREP=${SAVEPREP:-NO}
 
 ##[ $NEMS = YES ] && { sig=gfn; sfc=sfn; } || { sig=sig; sfc=sfc; }
 
 export PRVT=${PRVT:-$NWPROD/fix/prepobs_errtable.global}
-export PREX=$EXECcfs/cfs_prevmpi
+export PREX=${PREX:-$EXECcfs/cfs_prevmpi}
 
 export CHGRP_RSTPROD=${CHGRP_RSTPROD:-YES}
 
@@ -48,8 +49,8 @@ postmsg "$jlogfile" "$msg"
 fh1=06
 fh2=00
 hh=$(echo $CDATE | cut -c9-10)
-yyyymmdd=$(echo $CDATE | cut -c1-8)
-COMLIC=$COM_INA
+pdy=$(echo $CDATE | cut -c1-8)
+eval COMLIC=$COM_INA
 
 if [[ $RUN_ENVIR = nemsio || $RUN_ENVIR = netcdf ]] ; then
   [[ $RUN_ENVIR = nemsio ]] && suffix=nemsio || suffix=nc
@@ -60,12 +61,13 @@ if [[ $RUN_ENVIR = nemsio || $RUN_ENVIR = netcdf ]] ; then
   export sfc1=$COMLIC/gdas.t${hh}z.atmanl.$suffix
   export CNVS=$COMLIC/gdas.t${hh}z.cnvstat
 elif [[ $RUN_ENVIR = cfs ]]; then
-  export PRPI=$COMLIC/prepqc.$CDUMPPREP.$CDATE
-  export PRPO=$COMLOX/prepqa.$CDUMPPREP.$CDATE
-  export PRPF=$COMLOX/prepqf.$CDUMPPREP.$CDATE
-  export sig1=$COMLIC/siganl.$CDUMPANAL.$CDATE
-  export sfc1=$COMLIC/sfcanl.$CDUMPANAL.$CDATE
-  export CNVS=$COMLIC/cnvstat.$CDUMPPREP.$CDATE
+  tzz=t${hh}z
+  export PRPI=$COMLIC/cdas1.$tzz.prepbufr       
+  export PRPO=$COMOUT/cdas1.$tzz.prepqa           
+  export PRPF=$COMLOX/cdas1.$tzz.prepqf
+  export sig1=$COMLIC/cdas1.$tzz.sanl               
+  export sfc1=$COMLIC/cdas1.$tzz.sfcanl 
+  export CNVS=$COMLIC/cdas1.$tzz.cnvstat 
 else 
   echo $RUN_ENVIR = unknown RUN_ENVIR; exit 999 
 fi
@@ -112,13 +114,15 @@ do
 [ $fh = xx ] && continue
 
 FDATE=$($NDATE -$fh $CDATE)
+fdy=$(echo $FDATE|cut -c 1-8)
+fzz=$(echo $FDATE|cut -c 9-10)
+eval COMLICF=$COM_INF
+
 if [[ $RUN_ENVIR = nemsio || $RUN_ENVIR = netcdf ]] ; then
   fhm3=$((fh-$tspan)); [ $fhm3 -lt 10 ] && fhm3=0$fhm3; [ $fhm3 -lt 100 ] && fhm3=0$fhm3
   fhp3=$((fh+$tspan)); [ $fhp3 -lt 10 ] && fhp3=0$fhp3; [ $fhp3 -lt 100 ] && fhp3=0$fhp3
   fh00=$fh;            [ $fh00 -lt 10 ] && fh00=0$fh00; [ $fh00 -lt 100 ] && fh00=0$fh00
-  yyyymmdd=$(echo $FDATE|cut -c1-8); tzz=t$(echo $FDATE|cut -c9-10)z
-  zz=$(echo $FDATE|cut -c9-10)
-  COMLICF=$COM_INF/gfs.$yyyymmdd/$zz
+  tzz=t$(echo $FDATE|cut -c9-10)z
   [[ $RUN_ENVIR = nemsio ]] && suffix=nemsio || suffix=nc
   export sig1=$COMLICF/gfs.$tzz.atmf$fhm3.$suffix  
   export sig2=$COMLICF/gfs.$tzz.atmf$fh00.$suffix
@@ -127,15 +131,15 @@ if [[ $RUN_ENVIR = nemsio || $RUN_ENVIR = netcdf ]] ; then
   export sfc2=$COMLICF/gfs.$tzz.atmf$fh00.$suffix
   export sfc3=$COMLICF/gfs.$tzz.atmf$fhp3.$suffix
 elif [[ $RUN_ENVIR = cfs ]]; then
-  fhm3=$((fh-$tspan)); [ $fhm3 -lt 10 ] && fhm3=0$fhm3
-  fhp3=$((fh+$tspan)); fh00=$fh          
-  COMLICF=$COM_INF/cfs.$yyyymmdd/$zz/m01
-  export sig1=$COMLOC/${sig}f${fhm3}.$CDUMPFCST.$FDATE 
-  export sig2=$COMLOC/${sig}f${fh00}.$CDUMPFCST.$FDATE 
-  export sig3=$COMLOC/${sig}f${fhp3}.$CDUMPFCST.$FDATE 
-  export sfc1=$COMLOC/${sfc}f${fhm3}.$CDUMPFCST.$FDATE 
-  export sfc2=$COMLOC/${sfc}f${fh00}.$CDUMPFCST.$FDATE 
-  export sfc3=$COMLOC/${sfc}f${fhp3}.$CDUMPFCST.$FDATE 
+  CDAM3=$($NDATE -$tspan  $CDATE)
+  CDAP3=$($NDATE +$tspan  $CDATE)
+  fdy=$(echo $FDATE|cut -c1-8); fzz=$(echo $FDATE|cut -c9-10)
+  export sig1=$COMLICF/sigf${CDAM3}.01.$FDATE
+  export sig2=$COMLICF/sigf${CDATE}.01.$FDATE
+  export sig3=$COMLICF/sigf${CDAP3}.01.$FDATE
+  export sfc1=$COMLICF/sfcf${CDAM3}.01.$FDATE
+  export sfc2=$COMLICF/sfcf${CDATE}.01.$FDATE
+  export sfc3=$COMLICF/sfcf${CDAP3}.01.$FDATE
 else 
   echo $RUN_ENVIR = unknown RUN_ENVIR; exit 999 
 fi

@@ -52,7 +52,7 @@ export err=$?; ##$DATA/err_chk
 
 #combine the postevents outp messages together
 
-$COMBFRSH preppost_* prep_w_dups ; rm -f preppost_*
+cat preppost_* > prep_w_dups ; rm -f preppost_*
 
 set -x
 
