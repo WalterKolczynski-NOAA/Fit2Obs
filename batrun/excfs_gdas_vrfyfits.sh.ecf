@@ -48,8 +48,10 @@ postmsg "$jlogfile" "$msg"
 # make bufr convdiag postevents for analysis only...
 fh1=06
 fh2=00
-hh=$(echo $CDATE | cut -c9-10)
 pdy=$(echo $CDATE | cut -c1-8)
+hh=$(echo $CDATE | cut -c9-10)
+cyc=$hh
+
 eval COMLIC=$COM_INA
 
 if [[ $RUN_ENVIR = nemsio || $RUN_ENVIR = netcdf ]] ; then
@@ -133,7 +135,6 @@ if [[ $RUN_ENVIR = nemsio || $RUN_ENVIR = netcdf ]] ; then
 elif [[ $RUN_ENVIR = cfs ]]; then
   CDAM3=$($NDATE -$tspan  $CDATE)
   CDAP3=$($NDATE +$tspan  $CDATE)
-  fdy=$(echo $FDATE|cut -c1-8); fzz=$(echo $FDATE|cut -c9-10)
   export sig1=$COMLICF/sigf${CDAM3}.01.$FDATE
   export sig2=$COMLICF/sigf${CDATE}.01.$FDATE
   export sig3=$COMLICF/sigf${CDAP3}.01.$FDATE
