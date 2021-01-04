@@ -64,17 +64,16 @@ export EXP=$EXPNAM
 export COMPONENT=${COMPONENT:-atmos}
 export COM_IN=$ROTDIR
 export COM_INA=$ROTDIR/gdas.$vday/$vcyc/$COMPONENT
-export COM_INF=$ROTDIR/vrfyarch/gfs.\$fdy/\$fzz
+export COM_INF='$ROTDIR/vrfyarch/gfs.\$fdy/\$fzz'
 export KEEPDATA=$KEEPDATA
 
-export RUN_ENVIR=$RUN_ENVIR
-export CONVNETC=$CONVNETC
+export RUN_ENVIR=netcdf     
+export CONVNETC=YES        
+export ACPROFit=YES  
 
 export fitdir=$fitdir
 export ARCDIR=$ARCDIR
 export TMPDIR=$vrfytmpdiris
-export ACPROFit=${ACPROFit:-YES}
-export NEMS=${NEMS:-YES}   
 export PRVT=${PRVT:-$HOMEgfs/fix/fix_gsi/prepobs_errtable.global}
 export HYBLEVS=${HYBLEVS:-$HOMEgfs/fix/fix_am/global_hyblev.l65.txt}
 
