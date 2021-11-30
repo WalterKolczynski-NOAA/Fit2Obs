@@ -26,7 +26,7 @@ export CONVNETC=YES
 
 export FITDIR=/lfs/h2/emc/global/noscrub/Jack.Woollen/Fit2Obs             
 
-$PWD/subfits_wc2 gfs16.2 $date          
+$PWD/subfits_wcoss2 gfs16.2 $date          
 
 date=$(bumpidx $date 6)
 done

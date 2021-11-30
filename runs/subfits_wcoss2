@@ -31,12 +31,14 @@ set -x
 
 mkdir -p $COMROT $COMDAY
 
+nproc=3
+
 cat<<eof | qsub -
 #!/bin/bash
 #PBS -N FITS.$EXPNAM.$CDATE
 #PBS -o $COMDAY/FITS.$EXPNAM.$CDATE.$$
 #PBS -A $ACCOUNT
-#PBS -l select=1:ncpus=3:mpiprocs=3:mem=100GB
+#PBS -l select=1:ncpus=$nproc:mpiprocs=$nproc:mem=200GB
 #PBS -l walltime=${TIMELIM:-02:00:00}
 #PBS -q ${CUE2RUN:-dev}
 #PBS -j oe
@@ -65,8 +67,8 @@ module list
 set -x
 
 export OMP_NUM_THREADS=${FITOMP:-1}
-export KMP_AFFINITY=disabled
-export MPIRUN="mpiexec -n 3"
+export MPIRUN="mpiexec -n $nproc"
+##export KMP_AFFINITY=disabled
 
 export ARCDIR=$ARCDIR
 export TMPDIR=$TMPDIR

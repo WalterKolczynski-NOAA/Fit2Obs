@@ -95,7 +95,6 @@ elif [ $plat = wcoss2 ]; then
  export SIGIO_INC4=$SIGIO_INC
  export SFCIO_LIB4=$SFCIO_LIB
  export SFCIO_INC4=$SFCIO_INC
- export FLAGS="-O3 -g -traceback"
  export FCMP="ftn"           
 else
  echo no recognised platform
