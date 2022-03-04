@@ -1,23 +1,16 @@
 #!/usr/bin/env bash
 set -eua
 
-ptmp=$ptmp                 
+EXPNAM=$1 CDATE=$2 ARCDIR=${ARCDIR:-$3} TMPDIR=${TMPDIR:-$4}
 
-EXPNAM=$1 CDATE=$2 COMROT=${3:-${COMROT:-$ptmp/$USER}} ARCDIR=${4:-${ARCDIR:-$COMROT/archive}} TMPDIR=${5:-${TMPDIR:-$ptmp/$USER/f2o.$$/tmpdir}}
-
-FITDIR=$(cd $FITDIR; pwd); fitdir=$FITDIR/batrun
-
-COMDAY=${COMDAY:-$COMROT}
-
-mkdir -p $TMPDIR
+FITDIR=$(dirname $0); fitdir=$(cd $FITDIR/../batrun; pwd)
 
 set +x
 echo -------------------------------------------------------------------------------------------------------------------
-echo Starting the runfits for:
+echo Starting runfits: the following variables must be defined:
 echo -------------------------------------------------------------------------------------------------------------------
 echo "EXPNAM    " $EXPNAM       # argument 1 - experiment name    - required  
 echo "CDATE     " $CDATE        # argument 2 - date of validation - required
-echo "COMROT    " $COMROT       # argument 3 - COMROT directory   - optional - defaults to $ptmp/$USER  
 echo "ARCDIR    " $ARCDIR       # argument 4 - ARCDIR directory   - optional - defaults to $COMROT/archive
 echo "TMPDIR    " $TMPDIR       # argument 5 - TMPDIR directory   - optional - defaults to /ptmp/$USER/tmpdir
 echo "COMDAY    " $COMDAY       # inheirited - dayfile directory  - optional - defaults to $COMROT     
@@ -29,7 +22,7 @@ echo "RUN_ENVIR " $RUN_ENVIR    # inheirited - project code       - required - e
 echo -------------------------------------------------------------------------------------------------------------------
 set -x
 
-mkdir -p $COMROT $COMDAY
+mkdir -p $COMDAY $TMPDIR
 
 nproc=3
 
@@ -45,7 +38,7 @@ cat<<eof | qsub -
 #PBS -V       
 
 #!/usr/bin/env bash
-set -euax  # print commands as they are executed and enable signal trapping
+set -euax  
 
 CDATE=$CDATE
 
@@ -66,15 +59,22 @@ module load netcdf/4.7.4
 module list
 set -x
 
+set +ux
+echo
+echo COM_PRP='$COM_PRP'
+echo COM_INA='$COM_INA'
+echo COM_INF='$COM_INF'
+echo
+set -ux
+
 export OMP_NUM_THREADS=${FITOMP:-1}
 export MPIRUN="mpiexec -n $nproc"
-##export KMP_AFFINITY=disabled
 
 export ARCDIR=$ARCDIR
 export TMPDIR=$TMPDIR
 export fitdir=$fitdir
 
-time $fitdir/runfits $EXPNAM $CDATE $COMROT
+time $fitdir/runfits $EXPNAM $CDATE 
 
 eof
 

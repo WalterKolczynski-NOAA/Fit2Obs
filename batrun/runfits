@@ -1,6 +1,6 @@
 set -euax
 
-exp=$1  CDATE=$2  COMROT=$3 
+exp=$1  CDATE=$2  COMROT=/dev/null
 
 export HOMEcfs=$fitdir/..
 export EXECcfs=$HOMEcfs/exec 

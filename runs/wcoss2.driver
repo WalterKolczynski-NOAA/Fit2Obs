@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -eua
+
+CDATE=$1 
+
+export CUE2RUN=dev
+export ACCOUNT=CFS-DEV
+export ARCDIR=$ptmp/gdas/archive/v16
+export COMDAY=$PWD/outputs; mkdir -p $COMDAY
+export ROTDIR=/lfs/h2/emc/ptmp/Lin.Gan/ecfops/com/prod/gfs/v16.2
+export OBSDIR=/lfs/h1/ops/prod/com/obsproc/v1.0
+export TMPDIR=/lfs/h2/emc/ptmp/$USER/f2o.$$     
+export FITDIR=/lfs/h2/emc/global/noscrub/Jack.Woollen/Fit2Obs
+
+export COM_PRP='$OBSDIR/gdas.$pdy/$cyc/atmos'
+export COM_INA='$ROTDIR/gdas.$pdy/$cyc/atmos'
+export COM_INF='$ROTDIR/vrfyarch/gfs.$fdy/$fzz'
+
+export RUN_ENVIR=netcdf
+export ACPROFit=YES
+export CONVNETC=YES
+
+$FITDIR/batrun/subfits_wcoss2 ecfops  $CDATE         
+

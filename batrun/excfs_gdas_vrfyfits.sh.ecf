@@ -23,8 +23,6 @@ export BUFRPOSTSH=${BUFRPOSTSH:-$USHcfs/${cfsp}bufr_post.sh}
 export FITSSH=${FITSSH:-$USHcfs/${cfsd}fits.sh}
 export HORZSH=${HORZSH:-$USHcfs/${cfsd}horizn.sh}
 export CNVDIAGEXEC=${CNVDIAGEXEC:-$EXECcfs/${cfsp}post_convdiag}
-export COMLOC=${COMLOC:-$COMROT}
-export COMANL=${COMANL:-$COMROT}
 export COMLOX=${COMLOX:-$DATA}   
 export COMOUT=${COMOUT:-$DATA}   
 export SAVEPREP=${SAVEPREP:-NO}
@@ -52,11 +50,15 @@ pdy=$(echo $CDATE | cut -c1-8)
 hh=$(echo $CDATE | cut -c9-10)
 cyc=$hh
 
+set +u
 eval COMLIC=$COM_INA
+eval COMPRP=$COM_PRP
+COMPRP=${COMPRP:-$COMLIC}
+set -u
 
 if [[ $RUN_ENVIR = nemsio || $RUN_ENVIR = netcdf ]] ; then
   [[ $RUN_ENVIR = nemsio ]] && suffix=nemsio || suffix=nc
-  export PRPI=$COMLIC/gdas.t${hh}z.prepbufr
+  export PRPI=$COMPRP/gdas.t${hh}z.prepbufr
   export PRPO=$COMLOX/gdas.t${hh}z.prepqa
   export PRPF=$COMLOX/gdas.t${hh}z.prepqf
   export sig1=$COMLIC/gdas.t${hh}z.atmanl.$suffix
