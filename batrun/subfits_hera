@@ -31,36 +31,29 @@ unset TMPDIR
 
 cat<<EOF | sbatch
 #!/bin/bash --login
-#SBATCH --job-name=FITS.$EXPNAM.$CDATE --time=03:00:00
-#SBATCH --nodes=3 --ntasks-per-node=1
-#SBATCH --mem=128G
-#SBATCH --output=$COMDAY/fit2obs.log
+#SBATCH --job-name=FITS.$EXPNAM.$CDATE --time=00:20:00
+#SBATCH --nodes=1 --ntasks=4  --exclusive  
+#SBATCH --output=$COMDAY/hera.fit2obs.log.$$
 #SBATCH --account=$ACCOUNT  
+#SBATCH --qos=batch 
 
 set -euax
 
 set +x
-module purge
-module load intel/18.0.5.274
-module load impi/2018.0.4
-#module load netcdf/4.6.1
-module use /scratch2/NCEPDEV/nwprod/NCEPLIBS/modulefiles
-module load hdf5_parallel/1.10.6
-module load netcdf_parallel/4.7.4
-module use -a /scratch2/NCEPDEV/nwprod/NCEPLIBS/modulefiles
-module load prod_util/1.1.0
+module use /scratch2/NCEPDEV/nwprod/hpc-stack/libs/hpc-stack/modulefiles/stack
+module load  hpc/1.1.0  hpc-intel/2022.1.2  hpc-impi/2022.1.2
 module list
 set -x
 
 export OMP_NUM_THREADS=${FITOMP:-1}
-export MPIRUN="srun --export=ALL -n 3"
+export MPIRUN="srun -n 4"
 
 export CDATE=$CDATE
 export EXP=$EXPNAM
 export COMPONENT=${COMPONENT:-atmos}
 export COM_IN=$ROTDIR
 export COM_INA=$ROTDIR/gdas.$vday/$vcyc/$COMPONENT
-export COM_INF=$ROTDIR/vrfyarch
+export COM_INF='$ROTDIR/vrfyarch/gfs.\$fdy/\$fzz'
 export KEEPDATA=$KEEPDATA
 
 export fitdir=$fitdir
@@ -68,8 +61,6 @@ export ARCDIR=$ARCDIR
 export TMPDIR=$vrfytmpdiris
 export ACPROFit=${ACPROFit:-YES}
 export NEMS=${NEMS:-YES}   
-export PRVT=${PRVT:-$HOMEgfs/fix/fix_gsi/prepobs_errtable.global}
-export HYBLEVS=${HYBLEVS:-$HOMEgfs/fix/fix_am/global_hyblev.l65.txt}
 
 time $fitdir/runfits $EXPNAM $CDATE $COMROT
 
