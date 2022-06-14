@@ -21,7 +21,7 @@ echo "ACCOUNT   " $ACCOUNT      # inherited  - project code       - required - d
 echo "KEEPDATA  " $KEEPDATA     # inherited  - retain rundir      - optional - defaults to NO (rmdir)
 echo -------------------------------------------------------------------------------------------------------------------
 
-fitdir=$(dirname $0); fitdir=$(cd $fitdir; pwd)
+fitdir=${fitdir:-$(dirname $0)}; fitdir=$(cd $fitdir; pwd)
 COMDAY=${COMDAY:-$COMROT/logs/$CDATE}
 
 set -euax          
@@ -32,7 +32,8 @@ unset TMPDIR
 cat<<EOF | sbatch
 #!/bin/bash --login
 #SBATCH --job-name=FITS.$EXPNAM.$CDATE --time=00:20:00
-#SBATCH --nodes=1 --ntasks=4  --exclusive  
+#SBATCH --nodes=3 --ntasks-per-node=1
+#SBATCH --mem=128G
 #SBATCH --output=$COMDAY/hera.fit2obs.log.$$
 #SBATCH --account=$ACCOUNT  
 #SBATCH --qos=batch 
@@ -42,18 +43,17 @@ set -euax
 set +x
 module use /scratch2/NCEPDEV/nwprod/hpc-stack/libs/hpc-stack/modulefiles/stack
 module load  hpc/1.1.0  hpc-intel/2022.1.2  hpc-impi/2022.1.2
+module load netcdf/4.7.0
 module list
 set -x
 
 export OMP_NUM_THREADS=${FITOMP:-1}
-export MPIRUN="srun -n 4"
+export MPIRUN="srun --export=ALL -n 3"
 
 export CDATE=$CDATE
 export EXP=$EXPNAM
 export COMPONENT=${COMPONENT:-atmos}
 export COM_IN=$ROTDIR
-export COM_INA=$ROTDIR/gdas.$vday/$vcyc/$COMPONENT
-export COM_INF='$ROTDIR/vrfyarch/gfs.\$fdy/\$fzz'
 export KEEPDATA=$KEEPDATA
 
 export fitdir=$fitdir
