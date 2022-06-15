@@ -35,8 +35,8 @@ cat<<EOF | sbatch
 #SBATCH --nodes=1 --ntasks=3
 #SBATCH --output=$COMDAY/FITS.$EXPNAM.$CDATE.$$
 #SBATCH --account=$ACCOUNT
-#SBATCH --partition=debug
-#SBATCH -q debug
+#SBATCH --partition=orion 
+#SBATCH --qos batch 
 
 #!/usr/bin/env bash
 set -euax
@@ -51,25 +51,18 @@ set -x
 
 export OMP_NUM_THREADS=${FITOMP:-1}
 export MPIRUN="srun --export=ALL -n 3"
-export KMP_AFFINITY=disabled
 
 export CDATE=$CDATE
 export EXP=$EXPNAM
 export COMPONENT=${COMPONENT:-atmos}
 export COM_IN=$ROTDIR
-export COM_INA=$ROTDIR/gdas.$vday/$vcyc/$COMPONENT
-export COM_INF='$ROTDIR/vrfyarch/gfs.\$fdy/\$fzz'
 export KEEPDATA=$KEEPDATA
-
-export RUN_ENVIR=netcdf     
-export CONVNETC=YES        
-export ACPROFit=YES  
 
 export fitdir=$fitdir
 export ARCDIR=$ARCDIR
 export TMPDIR=$vrfytmpdiris
-export PRVT=${PRVT:-$HOMEgfs/fix/fix_gsi/prepobs_errtable.global}
-export HYBLEVS=${HYBLEVS:-$HOMEgfs/fix/fix_am/global_hyblev.l65.txt}
+export ACPROFit=${ACPROFit:-YES}
+export NEMS=${NEMS:-YES}
 
 time $fitdir/runfits $EXPNAM $CDATE $COMROT
 
