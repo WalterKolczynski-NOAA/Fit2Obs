@@ -3,8 +3,11 @@ set -euax
 EXPNAM=$1 CDATE=$2 COMROT=${3:-$STMP/$USER} ARCDIR=${4:-$COMROT/archive} TMPDIR=${5:-$STMP/$USER/tmpdir}
 
 ACCOUNT=${ACCOUNT:-CFS-T2O}
-CUE2RUN=${CUE2RUN:-dev}
+CUE2RUN=${CUE2RUN:-batch}
 KEEPDATA=${KEEPDATA:-NO}
+
+[[ $CUE2RUN == batch ]] && PART=orion
+[[ $CUE2RUN == debug ]] && PART=debug
 
 vday=$(echo $CDATE | cut -c1-8)
 vcyc=$(echo $CDATE | cut -c9-10)
@@ -35,8 +38,8 @@ cat<<EOF | sbatch
 #SBATCH --nodes=1 --ntasks=3
 #SBATCH --output=$COMDAY/FITS.$EXPNAM.$CDATE.$$
 #SBATCH --account=$ACCOUNT
-#SBATCH --partition=orion 
-#SBATCH --qos batch 
+#SBATCH --partition=$PART 
+#SBATCH --qos $CUE2RUN
 
 #!/usr/bin/env bash
 set -euax
