@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/bin/bash
 #############################################################################
 # This script excfs_cdas_vrfyfits.sh.sms processes fits to obs
 # and generates the model verification statistis for CDAS/CFS
@@ -40,8 +40,7 @@ export PREC=$DATA/prec; echo  "&PREVDATA doanls=t,fits=t /" >$PREC
 #################################################################
 
 cd $DATA
-msg="JOB $job HAS BEGUN"
-postmsg "$jlogfile" "$msg"
+echo "JOB $job HAS BEGUN"
 
 # make bufr convdiag postevents for analysis only...
 fh1=06
@@ -195,8 +194,7 @@ cp -p $COMLOX/aircft.$typ.$CDATE       $HORZ_DIR/$typ/aircft.$CDATE
 done
 
 ################## END OF SCRIPT #######################
-msg='ENDED NORMALLY.'
-postmsg "$jlogfile" "$msg"
+echo "ENDED NORMALLY."
 cd $(dirname $DATA)
 if [ ${KEEPDATA:-"NO"} = "NO" ] ; then rm -rf $DATA ; fi
 ################## END OF SCRIPT #######################
