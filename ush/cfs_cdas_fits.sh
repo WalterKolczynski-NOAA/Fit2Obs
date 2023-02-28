@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/bin/bash
 if [ $# -ne 6 ] ; then
   echo "Usage: $0 CDATE (yyyymmddhh) PRPO COMOUT DATA fh1 fh2"
   exit 1

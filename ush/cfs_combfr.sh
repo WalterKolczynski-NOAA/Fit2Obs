@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ####  UNIX Script Documentation Block
 #                .           .                                       .
 # Script name:   combfr      Combine blocked BUFR files
