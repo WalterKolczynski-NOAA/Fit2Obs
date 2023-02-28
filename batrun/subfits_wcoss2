@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -eua
 
 EXPNAM=$1 CDATE=$2 ARCDIR=${ARCDIR:-$3} TMPDIR=${TMPDIR:-$4}
@@ -37,7 +37,6 @@ cat<<eof | qsub -
 #PBS -j oe
 #PBS -V       
 
-#!/usr/bin/env bash
 set -euax  
 
 CDATE=$CDATE
@@ -45,7 +44,7 @@ CDATE=$CDATE
 cd $PWD
 
 set +x
-module purge
+module reset
 module load envvar/1.0
 module load PrgEnv-intel/8.1.0
 module load craype/2.7.8
