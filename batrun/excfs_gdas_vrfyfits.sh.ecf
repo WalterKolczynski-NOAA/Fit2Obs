@@ -55,15 +55,15 @@ eval COMPRP=$COM_PRP
 COMPRP=${COMPRP:-$COMLIC}
 set -u
 
-if [[ $RUN_ENVIR = nemsio || $RUN_ENVIR = netcdf ]] ; then
-  [[ $RUN_ENVIR = nemsio ]] && suffix=nemsio || suffix=nc
+if [[ $OUTPUT_FILETYPE = nemsio || $OUTPUT_FILETYPE = netcdf ]] ; then
+  [[ $OUTPUT_FILETYPE = nemsio ]] && suffix=nemsio || suffix=nc
   export PRPI=$COMPRP/gdas.t${hh}z.prepbufr
   export PRPO=$COMLOX/gdas.t${hh}z.prepqa
   export PRPF=$COMLOX/gdas.t${hh}z.prepqf
   export sig1=$COMLIC/gdas.t${hh}z.atmanl.$suffix
   export sfc1=$COMLIC/gdas.t${hh}z.atmanl.$suffix
   export CNVS=$COMLIC/gdas.t${hh}z.cnvstat
-elif [[ $RUN_ENVIR = cfs ]]; then
+elif [[ $OUTPUT_FILETYPE = cfs ]]; then
   tzz=t${hh}z
   export PRPI=$COMLIC/cdas1.$tzz.prepbufr       
   export PRPO=$COMOUT/cdas1.$tzz.prepqa           
@@ -72,7 +72,7 @@ elif [[ $RUN_ENVIR = cfs ]]; then
   export sfc1=$COMLIC/cdas1.$tzz.sfcanl 
   export CNVS=$COMLIC/cdas1.$tzz.cnvstat 
 else 
-  echo $RUN_ENVIR = unknown RUN_ENVIR; exit 999 
+  echo $OUTPUT_FILETYPE = unknown OUTPUT_FILETYPE; exit 999
 fi
 
 [ ${ACPROFit:-YES} != NO ] && PRPI=$($USHcfs/ACprof)
@@ -121,19 +121,19 @@ fdy=$(echo $FDATE|cut -c 1-8)
 fzz=$(echo $FDATE|cut -c 9-10)
 eval COMLICF=$COM_INF
 
-if [[ $RUN_ENVIR = nemsio || $RUN_ENVIR = netcdf ]] ; then
+if [[ $OUTPUT_FILETYPE = nemsio || $OUTPUT_FILETYPE = netcdf ]] ; then
   fhm3=$((fh-$tspan)); [ $fhm3 -lt 10 ] && fhm3=0$fhm3; [ $fhm3 -lt 100 ] && fhm3=0$fhm3
   fhp3=$((fh+$tspan)); [ $fhp3 -lt 10 ] && fhp3=0$fhp3; [ $fhp3 -lt 100 ] && fhp3=0$fhp3
   fh00=$fh;            [ $fh00 -lt 10 ] && fh00=0$fh00; [ $fh00 -lt 100 ] && fh00=0$fh00
   tzz=t$(echo $FDATE|cut -c9-10)z
-  [[ $RUN_ENVIR = nemsio ]] && suffix=nemsio || suffix=nc
+  [[ $OUTPUT_FILETYPE = nemsio ]] && suffix=nemsio || suffix=nc
   export sig1=$COMLICF/gfs.$tzz.atmf$fhm3.$suffix  
   export sig2=$COMLICF/gfs.$tzz.atmf$fh00.$suffix
   export sig3=$COMLICF/gfs.$tzz.atmf$fhp3.$suffix
   export sfc1=$COMLICF/gfs.$tzz.atmf$fhm3.$suffix
   export sfc2=$COMLICF/gfs.$tzz.atmf$fh00.$suffix
   export sfc3=$COMLICF/gfs.$tzz.atmf$fhp3.$suffix
-elif [[ $RUN_ENVIR = cfs ]]; then
+elif [[ $OUTPUT_FILETYPE = cfs ]]; then
   CDAM3=$($NDATE -$tspan  $CDATE)
   CDAP3=$($NDATE +$tspan  $CDATE)
   export sig1=$COMLICF/sigf${CDAM3}.01.$FDATE
@@ -143,7 +143,7 @@ elif [[ $RUN_ENVIR = cfs ]]; then
   export sfc2=$COMLICF/sfcf${CDATE}.01.$FDATE
   export sfc3=$COMLICF/sfcf${CDAP3}.01.$FDATE
 else 
-  echo $RUN_ENVIR = unknown RUN_ENVIR; exit 999 
+  echo $OUTPUT_FILETYPE = unknown OUTPUT_FILETYPE; exit 999
 fi
 
 if [ -s $sig1 -a -s $sig2 -a -s $sig3 ] ; then 

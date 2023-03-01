@@ -67,7 +67,7 @@ export COM_INA=$ROTDIR/gdas.$vday/$vcyc/$COMPONENT
 export COM_INF='$ROTDIR/vrfyarch/gfs.\$fdy/\$fzz'
 export KEEPDATA=$KEEPDATA
 
-export RUN_ENVIR=netcdf     
+export OUTPUT_FILETYPE=netcdf
 export CONVNETC=YES        
 export ACPROFit=YES  
 

@@ -20,7 +20,7 @@ export ARCDIR=/gpfs/dell2/emc/verification/noscrub/Jack.Woollen/Fit2Obs/runs/arc
 export COM_INA=/gpfs/dell1/nco/ops/com/gfs/prod/gdas.$day/$our   
 export COM_INF='/gpfs/dell1/nco/ops/com/gfs/prod/gfs.$fdy/$fzz'  
 
-export RUN_ENVIR=nemsio 
+export OUTPUT_FILETYPE=nemsio
 export CONVNETC=NO 
 
 FITDIR=/gpfs/dell2/emc/verification/noscrub/Jack.Woollen/Fit2Obs           

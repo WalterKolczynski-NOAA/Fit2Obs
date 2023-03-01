@@ -15,7 +15,7 @@ export ARCDIR=/gpfs/dell2/ptmp/Jack.Woollen/gdas/archive/v16
 
 export COMDAY=$PWD/outputs; mkdir -p $COMDAY
 
-export RUN_ENVIR=netcdf 
+export OUTPUT_FILETYPE=netcdf
 export EXPNAM=v16rt2c
 export CONVNETC=YES
 export ROTDIRS=/gpfs/dell3/ptmp/emc.glopara/ROTDIRS

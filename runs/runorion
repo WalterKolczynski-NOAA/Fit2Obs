@@ -13,7 +13,7 @@ export ACCOUNT=fv3-cpu
 export COMDAY=$PWD/outputs; mkdir -p $COMDAY
 
 export COMPONENT=${COMPONENT:-atmos}
-export RUN_ENVIR=netcdf 
+export OUTPUT_FILETYPE=netcdf
 export CONVNETC=YES
 
 export ROTDIR=/work/noaa/stmp/lgan/comrot/naf19296       

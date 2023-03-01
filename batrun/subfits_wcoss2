@@ -18,7 +18,7 @@ echo "FITDIR    " $FITDIR       # inheirited - Fit2obs batrun dir - optional - d
 echo "ACCOUNT   " $ACCOUNT      # inheirited - project code       - required - defaults to nothing
 echo "COM_INA   " $COM_INA      # inheirited - project code       - required - defaults to nothing
 echo "COM_INF   " $COM_INF      # inheirited - project code       - required - defaults to nothing
-echo "RUN_ENVIR " $RUN_ENVIR    # inheirited - project code       - required - either nemsio or netcdf defaults to sigio
+echo "OUTPUT_FILETYPE " $OUTPUT_FILETYPE    # inheirited - project code       - required - either nemsio or netcdf defaults to sigio
 echo -------------------------------------------------------------------------------------------------------------------
 set -x
 

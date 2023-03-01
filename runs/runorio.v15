@@ -14,7 +14,7 @@ export COMDAY=$PWD/outputs; mkdir -p $COMDAY
 export COM_INA='/work/noaa/da/jwoollen/v15ics'
 export COM_INF='/dev/null'  
 
-export RUN_ENVIR=nemsio 
+export OUTPUT_FILETYPE=nemsio
 export CONVNETC=NO 
 
 export HYBLEVS=$PWD/global_hyblev.l65.txt

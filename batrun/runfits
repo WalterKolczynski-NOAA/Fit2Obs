@@ -7,7 +7,7 @@ export EXECcfs=$HOMEcfs/exec
 export USHcfs=$HOMEcfs/ush 
 export NDATE=$EXECcfs/ndate
 
-export RUN_ENVIR=${RUN_ENVIR:-devpara}
+export OUTPUT_FILETYPE=${OUTPUT_FILETYPE:-netcdf}
 
 echo $ARCDIR                 ; mkdir -p $ARCDIR
 export FIT_DIR=$ARCDIR/fits  ; mkdir -p $FIT_DIR
