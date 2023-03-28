@@ -1,0 +1,8 @@
+*.aox
+*.mod
+.*sw[a-p]
+
+exec/
+build*/
+install*/
+log*
