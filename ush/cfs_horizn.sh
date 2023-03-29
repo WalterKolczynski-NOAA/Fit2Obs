@@ -7,7 +7,7 @@ fi
 set -xeua
 
 export HOMEcfs=${HOMEcfs:-/nwprod}
-export USHcfs=${USHcfs:-$HOMEcfs/ush}
+export USHcfs=${USHcfs:-$HOMEcfs/install/ush}
 export cfss=${cfss:-/cfs}
 export cfsp=${cfsp:-cfs_}
 export EXECcfs=${EXECcfs:-$HOMEcfs/install/exec}

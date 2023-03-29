@@ -4,7 +4,7 @@ exp=$1  CDATE=$2  COMROT=/dev/null
 
 export HOMEcfs=$fitdir/..
 export EXECcfs=$HOMEcfs/install/exec
-export USHcfs=$HOMEcfs/ush 
+export USHcfs=$HOMEcfs/install/ush
 export NDATE=$EXECcfs/ndate.x
 
 export OUTPUT_FILETYPE=${OUTPUT_FILETYPE:-netcdf}

@@ -23,7 +23,7 @@ export HOMEcfs=${HOMEcfs:-/nwprod}
 export cfss=${cfss:-/cfs}
 export cfsp=${cfsp:-cfs_}
 export DUPREPEXEC=${DUPREPEXEC:-$HOMEcfs/exec/${cfsp}duprep}
-export COMBFRSH=${COMBFRSH:-$HOMEcfs/ush/${cfsp}combfr.sh}
+export COMBFRSH=${COMBFRSH:-$USHcfs/${cfsp}combfr.sh}
 
 # setup the convstat or convnetc files
 

@@ -6,7 +6,7 @@ if [ $# -ne 5 ] ; then
 fi
 
 export HOMEcfs=${HOMEcfs:-/nwprod}
-export USHcfs=${USHcfs:-$HOMEcfs/ush}
+export USHcfs=${USHcfs:-$HOMEcfs/install/ush}
 
 export date=$1
 export prepqm=$2
