@@ -25,6 +25,9 @@ target_link_libraries(cfs_prevmpi.x PRIVATE bacio::bacio_4
                                             nemsio::nemsio)
 target_link_libraries(cfs_prevmpi.x PRIVATE MPI::MPI_Fortran)
 target_link_libraries(cfs_prevmpi.x PRIVATE NetCDF::NetCDF_Fortran)
+if(OpenMP_Fortran_FOUND)
+  target_link_libraries(cfs_prevmpi.x PRIVATE OpenMP::OpenMP_Fortran)
+endif()
 
 # Install targets
 install(TARGETS cfs_prevmpi.x RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
