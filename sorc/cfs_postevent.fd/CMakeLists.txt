@@ -6,7 +6,7 @@ list(APPEND EXEC_NAMES
 
 foreach(pgmname ${EXEC_NAMES})
 
-  set(exe_name "cfs_${pgmname}.x")
+  set(exe_name "cfs_${pgmname}")
   set(fortran_src "${pgmname}.f")
 
   add_executable(${exe_name} ${fortran_src})
@@ -26,16 +26,16 @@ elseif(CMAKE_Fortran_COMPILER_ID MATCHES "^(GNU)$")
   set_source_files_properties(read_convdiag3.f PROPERTIES COMPILE_FLAGS "-free-form")
 endif()
 
-add_executable(cfs_post_convdiag.x convdiag.f read_convdiag2.f)
-target_link_libraries(cfs_post_convdiag.x PRIVATE w3emc::w3emc_4
+add_executable(cfs_post_convdiag convdiag.f read_convdiag2.f)
+target_link_libraries(cfs_post_convdiag PRIVATE w3emc::w3emc_4
                                                   bufr::bufr_4)
-list(APPEND EXEC_TARGETS cfs_post_convdiag.x)
+list(APPEND EXEC_TARGETS cfs_post_convdiag)
 
-add_executable(cfs_post_convnetc.x convdiag.f read_convdiag3.f)
-target_link_libraries(cfs_post_convnetc.x PRIVATE w3emc::w3emc_4
+add_executable(cfs_post_convnetc convdiag.f read_convdiag3.f)
+target_link_libraries(cfs_post_convnetc PRIVATE w3emc::w3emc_4
                                                   bufr::bufr_4
                                                   NetCDF::NetCDF_Fortran)
-list(APPEND EXEC_TARGETS cfs_post_convnetc.x)
+list(APPEND EXEC_TARGETS cfs_post_convnetc)
 
 # Install targets
 install(TARGETS ${EXEC_TARGETS} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
