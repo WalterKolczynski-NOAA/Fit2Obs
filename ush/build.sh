@@ -40,4 +40,10 @@ make -j ${BUILD_JOBS:-8} VERBOSE=${BUILD_VERBOSE:-}
 make install
 set +x
 
+# Move the exec files to were they were before cmake-ifying
+rm -rf ${DIR_ROOT}/exec
+mkdir -p ${DIR_ROOT}/exec
+mv ${DIR_ROOT}/install/exec/* ${DIR_ROOT}/exec
+rm -rf ${DIR_ROOT}/install
+
 exit
