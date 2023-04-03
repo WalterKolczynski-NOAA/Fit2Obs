@@ -7,10 +7,10 @@ fi
 set -xeua
 
 export HOMEcfs=${HOMEcfs:-/nwprod}
-export USHcfs=${USHcfs:-$HOMEcfs/install/ush}
+export USHcfs=${USHcfs:-$HOMEcfs/ush}
 export cfss=${cfss:-/cfs}
 export cfsp=${cfsp:-cfs_}
-export EXECcfs=${EXECcfs:-$HOMEcfs/install/exec}
+export EXECcfs=${EXECcfs:-$HOMEcfs/exec}
 
 export oname=$1
 export nst=$2
@@ -35,7 +35,7 @@ export prtfile=$prtdir/$oname.$typ.$dtg.out
 export outname=$oname
 
 if [ $sfc -eq 1 ] ; then
-  $EXECcfs/${cfsp}bufrslsfc.x > $prtfile
+  $EXECcfs/${cfsp}bufrslsfc > $prtfile
 elif [ $sfc -eq 2 ] ; then
   if [ $iprs -eq 1 ] ; then
     outname=$oname.mand.$typ.$dtg
@@ -47,13 +47,13 @@ elif [ $sfc -eq 2 ] ; then
     outname=$oname.all.$typ.$dtg
     outfile=$outdir/$outname
   fi
-  $EXECcfs/${cfsp}bufrslupao.x >> $prtfile
+  $EXECcfs/${cfsp}bufrslupao >> $prtfile
 elif [ $sfc -eq 3 ] ; then
-  $EXECcfs/${cfsp}bufrslslev.x >> $prtfile
+  $EXECcfs/${cfsp}bufrslslev >> $prtfile
 elif [ $sfc -eq 4 ] ; then
-  $EXECcfs/${cfsp}bufrsltovs.x >> $prtfile
+  $EXECcfs/${cfsp}bufrsltovs >> $prtfile
 elif [ $sfc -eq 5 ] ; then
-  $EXECcfs/${cfsp}bufrslssmi.x >> $prtfile
+  $EXECcfs/${cfsp}bufrslssmi >> $prtfile
 fi
 
 ###cat $prtfile

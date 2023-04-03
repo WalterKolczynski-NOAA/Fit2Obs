@@ -6,7 +6,7 @@ if [ $# -ne 5 ] ; then
 fi
 
 export HOMEcfs=${HOMEcfs:-/nwprod}
-export USHcfs=${USHcfs:-$HOMEcfs/install/ush}
+export USHcfs=${USHcfs:-$HOMEcfs/ush}
 
 export date=$1
 export prepqm=$2
@@ -58,7 +58,7 @@ for hr in 0
 do
 export fchr=$hr
 export fdhr=0.5
-export dtg=`$EXECcfs/ndate.x $hr $date`
+export dtg=`$EXECcfs/ndate $hr $date`
 $USHcfs/cfs_horizn.sh $oname $nst $iall $imas $iwnd $fchr $fdhr $dtg $sfc
 done
 fi
@@ -75,7 +75,7 @@ for hr in 0
 do
 export fchr=$hr
 export fdhr=0.5
-export dtg=`$EXECcfs/ndate.x $hr $date`
+export dtg=`$EXECcfs/ndate $hr $date`
 $USHcfs/cfs_horizn.sh $oname $nst $iall $imas $iwnd $fchr $fdhr $dtg $sfc
 done
 fi
@@ -96,7 +96,7 @@ for hr in 0
 do
 export fchr=$hr
 export fdhr=4.0
-export dtg=`$EXECcfs/ndate.x $hr $date`
+export dtg=`$EXECcfs/ndate $hr $date`
 $USHcfs/cfs_horizn.sh $oname $nst $iall $imas $iwnd $fchr $fdhr $dtg $sfc
 done
 fi
@@ -113,7 +113,7 @@ for hr in 0
 do
 export fchr=$hr
 export fdhr=4.0
-export dtg=`$EXECcfs/ndate.x $hr $date`
+export dtg=`$EXECcfs/ndate $hr $date`
 $USHcfs/cfs_horizn.sh $oname $nst $iall $imas $iwnd $fchr $fdhr $dtg $sfc
 done
 fi
@@ -130,7 +130,7 @@ for hr in 0
 do
 export fchr=$hr
 export fdhr=4.0
-export dtg=`$EXECcfs/ndate.x $hr $date`
+export dtg=`$EXECcfs/ndate $hr $date`
 $USHcfs/cfs_horizn.sh $oname $nst $iall $imas $iwnd $fchr $fdhr $dtg $sfc
 done
 fi

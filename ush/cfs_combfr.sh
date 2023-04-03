@@ -54,7 +54,7 @@ echo
 exit 99
 fi
  
-COMX=$EXECcfs/cfs_combfr.x
+COMX=$EXECcfs/cfs_combfr
 COMI=combfr.in; >$COMI
  
 while [ $# -gt 1 ] ; do
