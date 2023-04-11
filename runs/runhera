@@ -15,16 +15,16 @@ export COMPONENT=${COMPONENT:-atmos}
 export OUTPUT_FILETYPE=netcdf
 export CONVNETC=YES
 
-export ROTDIR=/scratch1/NCEPDEV/stmp4/Kate.Friedman/comrot/devv16cyc192b
-export COM_INA=$ROTDIR/gdas.$vday/$vcyc/$COMPONENT
-export COM_INF='$ROTDIR/vrfyarch/gfs.$fdy/$fzz'
-export COM_IN=$ROTDIR
+export ROTDIR=/scratch1/NCEPDEV/stmp4/Kate.Friedman/comrot/testfit2obs
+export COM_INA=$ROTDIR/gdas.20220105/12/atmos
+export COM_PRP=$ROTDIR/gdas.20220105/12/obs
+export 'COM_INF=$ROTDIR/vrfyarch/gfs.$fdy/$fzz'
 
 export FITDIR=$(dirname $PWD)
 export fitdir=$(dirname $PWD)/batrun
 
 export STMP=$PWD/ptmp; mkdir -p $STMP
 
-$PWD/subfits_hera v16rt2 $date          
+$PWD/subfits_hera workf  $date          
 
 

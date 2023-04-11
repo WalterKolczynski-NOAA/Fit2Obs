@@ -35,7 +35,7 @@ export prtfile=$prtdir/$oname.$typ.$dtg.out
 export outname=$oname
 
 if [ $sfc -eq 1 ] ; then
-  $EXECcfs/${cfsp}bufrslsfc > $prtfile
+  $EXECcfs/${cfsp}bufrslsfc.x > $prtfile
 elif [ $sfc -eq 2 ] ; then
   if [ $iprs -eq 1 ] ; then
     outname=$oname.mand.$typ.$dtg
@@ -47,13 +47,13 @@ elif [ $sfc -eq 2 ] ; then
     outname=$oname.all.$typ.$dtg
     outfile=$outdir/$outname
   fi
-  $EXECcfs/${cfsp}bufrslupao >> $prtfile
+  $EXECcfs/${cfsp}bufrslupao.x >> $prtfile
 elif [ $sfc -eq 3 ] ; then
-  $EXECcfs/${cfsp}bufrslslev >> $prtfile
+  $EXECcfs/${cfsp}bufrslslev.x >> $prtfile
 elif [ $sfc -eq 4 ] ; then
-  $EXECcfs/${cfsp}bufrsltovs >> $prtfile
+  $EXECcfs/${cfsp}bufrsltovs.x >> $prtfile
 elif [ $sfc -eq 5 ] ; then
-  $EXECcfs/${cfsp}bufrslssmi >> $prtfile
+  $EXECcfs/${cfsp}bufrslssmi.x >> $prtfile
 fi
 
 ###cat $prtfile

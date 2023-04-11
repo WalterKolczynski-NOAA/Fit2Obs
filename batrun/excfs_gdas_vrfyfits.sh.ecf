@@ -22,7 +22,7 @@ export SIGEVENTSH=${SIGEVENTSH:-$USHcfs/${cfsp}prevmpi.sh}
 export BUFRPOSTSH=${BUFRPOSTSH:-$USHcfs/${cfsp}bufr_post.sh}
 export FITSSH=${FITSSH:-$USHcfs/${cfsd}fits.sh}
 export HORZSH=${HORZSH:-$USHcfs/${cfsd}horizn.sh}
-export CNVDIAGEXEC=${CNVDIAGEXEC:-$EXECcfs/${cfsp}post_convdiag}
+export CNVDIAGEXEC=${CNVDIAGEXEC:-$EXECcfs/${cfsp}post_convdiag.x}
 export COMLOX=${COMLOX:-$DATA}   
 export COMOUT=${COMOUT:-$DATA}   
 export SAVEPREP=${SAVEPREP:-NO}
@@ -30,7 +30,7 @@ export SAVEPREP=${SAVEPREP:-NO}
 ##[ $NEMS = YES ] && { sig=gfn; sfc=sfn; } || { sig=sig; sfc=sfc; }
 
 export PRVT=${PRVT:-$NWPROD/fix/prepobs_errtable.global}
-export PREX=${PREX:-$EXECcfs/cfs_prevmpi}
+export PREX=${PREX:-$EXECcfs/cfs_prevmpi.x}
 
 export CHGRP_RSTPROD=${CHGRP_RSTPROD:-YES}
 
@@ -89,8 +89,6 @@ $HORZSH     $CDATE $PRPO $COMLOX $DATA anl 2> horizout
 #################################################################
 # make prepqf file containing forecasts
 #################################################################
-
-export NDATE=${NDATE:-/nwprod/util/exec/ndate}
 
 cp $PRPO $PRPF || exit 2
 

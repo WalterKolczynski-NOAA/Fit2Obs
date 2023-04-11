@@ -22,6 +22,7 @@ prepbufr=$PREP # prepbufr into new post is prepbufr out of old post
 export HOMEcfs=${HOMEcfs:-/nwprod}
 export cfss=${cfss:-/cfs}
 export cfsp=${cfsp:-cfs_}
+
 export DUPREPEXEC=${DUPREPEXEC:-$EXECcfs/${cfsp}duprep}
 export COMBFRSH=${COMBFRSH:-$USHcfs/${cfsp}combfr.sh}
 
