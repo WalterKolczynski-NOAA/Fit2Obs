@@ -3,7 +3,6 @@ set -euax
 exp=$1  CDATE=$2  COMROT=/dev/null
 
 export HOMEcfs=$fitdir/..
-
 export EXECcfs=$HOMEcfs/exec
 export USHcfs=$HOMEcfs/ush
 export NDATE=$EXECcfs/ndate.x
