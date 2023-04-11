@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/bin/bash
 if [ $# -ne 9 ] ; then
   echo "Usage: $0 oname nst iall imas iwnd fchr fdhr dtg sfc"
   exit 1

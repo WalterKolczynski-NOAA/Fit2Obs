@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -eua
 #
 #   This script originally written by Jack Woollen
@@ -22,8 +22,8 @@ prepbufr=$PREP # prepbufr into new post is prepbufr out of old post
 export HOMEcfs=${HOMEcfs:-/nwprod}
 export cfss=${cfss:-/cfs}
 export cfsp=${cfsp:-cfs_}
-export DUPREPEXEC=${DUPREPEXEC:-$HOMEcfs/exec/${cfsp}duprep.x}
-export COMBFRSH=${COMBFRSH:-$HOMEcfs/ush/${cfsp}combfr.sh}
+export DUPREPEXEC=${DUPREPEXEC:-$EXECcfs/${cfsp}duprep.x}
+export COMBFRSH=${COMBFRSH:-$USHcfs/${cfsp}combfr.sh}
 
 # setup the convstat or convnetc files
 
@@ -32,11 +32,11 @@ set -x
 tar -xvf $cnvstat; gunzip -v  diag_conv_*
 
 if [[ ${CONVNETC:-NO} = NO ]]; then
-   export CNVDIAGEXEC=$HOMEcfs/exec/${cfsp}post_convdiag.x
+   export CNVDIAGEXEC=$EXECcfs/${cfsp}post_convdiag.x
    mv diag_conv_anl.* diag_conv_anl 
    mv diag_conv_ges.* diag_conv_ges 
 else
-   export CNVDIAGEXEC=$HOMEcfs/exec/${cfsp}post_convnetc.x
+   export CNVDIAGEXEC=$EXECcfs/${cfsp}post_convnetc.x
    for bak in ges anl  ; do
    for var in ps q t uv; do
    ln -sf diag_conv_${var}_${bak}.$CDATE.nc4  diag_conv_${bak}_${var}

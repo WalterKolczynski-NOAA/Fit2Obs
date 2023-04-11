@@ -10,7 +10,7 @@ list(APPEND EXEC_NAMES
 
 foreach(pgmname ${EXEC_NAMES})
 
-  set(exe_name "${pgmname}")
+  set(exe_name "${pgmname}.x")
   set(fortran_src "${pgmname}.f")
 
   add_executable(${exe_name} ${fortran_src})

@@ -10,7 +10,7 @@ BUILD_TYPE=${BUILD_TYPE:-"Release"}
 CMAKE_OPTS=${CMAKE_OPTS:-}
 COMPILER=${COMPILER:-"intel"}
 BUILD_DIR=${BUILD_DIR:-"${DIR_ROOT}/build"}
-INSTALL_PREFIX=${INSTALL_PREFIX:-"${DIR_ROOT}/install"}
+INSTALL_PREFIX=${INSTALL_PREFIX:-"${DIR_ROOT}"}
 
 #==============================================================================#
 
@@ -39,12 +39,5 @@ cmake $CMAKE_OPTS $DIR_ROOT
 make -j ${BUILD_JOBS:-8} VERBOSE=${BUILD_VERBOSE:-}
 make install
 set +x
-
-# Move the exec files to were they were before cmake-ifying
-rm -rf ${DIR_ROOT}/exec
-mkdir -p ${DIR_ROOT}/exec
-for execfile in $(ls ${DIR_ROOT}/install/exec); do
-mv ${DIR_ROOT}/install/exec/$execfile ${DIR_ROOT}/exec/$execfile.x
-done; rm -rf ${DIR_ROOT}/install
 
 exit

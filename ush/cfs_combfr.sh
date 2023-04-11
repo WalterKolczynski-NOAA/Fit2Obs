@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ####  UNIX Script Documentation Block
 #                .           .                                       .
 # Script name:   combfr      Combine blocked BUFR files
@@ -54,7 +54,7 @@ echo
 exit 99
 fi
  
-COMX=$EXECcfs/cfs_combfr.x                          
+COMX=$EXECcfs/cfs_combfr.x
 COMI=combfr.in; >$COMI
  
 while [ $# -gt 1 ] ; do

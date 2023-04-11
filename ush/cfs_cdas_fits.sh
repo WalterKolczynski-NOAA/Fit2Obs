@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/bin/bash
 if [ $# -ne 6 ] ; then
   echo "Usage: $0 CDATE (yyyymmddhh) PRPO COMOUT DATA fh1 fh2"
   exit 1
@@ -28,7 +28,7 @@ for sub in $list ; do
   ln -sf $PRPO             fort.11
   ln -sf f$fh1.$sub.$CDATE fort.51
   ln -sf f$fh2.$sub.$CDATE fort.52
-  $EXECcfs/${cfsp}$sub.x > $prfile.${sub}.f${fh1}_f${fh2}
+  $EXECcfs/${cfsp}${sub}.x > $prfile.${sub}.f${fh1}_f${fh2}
   export err=$?; $DATA/err_chk
   mv f$fh1.$sub.$CDATE $COMOUT/.
   mv f$fh2.$sub.$CDATE $COMOUT/.

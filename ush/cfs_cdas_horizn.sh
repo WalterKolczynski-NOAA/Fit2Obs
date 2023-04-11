@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/bin/bash
 set -xeua
 if [ $# -ne 5 ] ; then
   echo "Usage: $0 date (yyyymmddhh) prepqm outdir prtdir typ"

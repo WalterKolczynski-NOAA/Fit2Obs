@@ -14,7 +14,7 @@ export COMDAY=$PWD/outputs; mkdir -p $COMDAY
 export COM_INA='/work/noaa/da/jwoollen/ics'
 export COM_INF='/dev/null'  
 
-export RUN_ENVIR=netcdf 
+export OUTPUT_FILETYPE=netcdf
 export CONVNETC=YES
 
 export FITDIR=$(dirname $PWD)

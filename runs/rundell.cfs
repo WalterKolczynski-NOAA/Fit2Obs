@@ -4,7 +4,7 @@ export date=$1; pdy=$(echo $date|cut -c 1-8)
 
 export CUE2RUN=dev2
 
-export RUN_ENVIR=cfs    
+export OUTPUT_FILETYPE=cfs
 
 export ACCOUNT=CFS-T2O
 

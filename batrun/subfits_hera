@@ -1,3 +1,4 @@
+#!/bin/bash
 set -euax
 
 EXPNAM=$1 CDATE=$2 COMROT=${3:-$STMP/$USER} ARCDIR=${4:-$COMROT/archive} TMPDIR=${5:-$STMP/$USER/tmpdir}
@@ -30,7 +31,7 @@ vrfytmpdiris=$TMPDIR
 unset TMPDIR
 
 cat<<EOF | sbatch
-#!/bin/bash --login
+#!/bin/bash
 #SBATCH --job-name=FITS.$EXPNAM.$CDATE --time=00:20:00
 #SBATCH --nodes=3 --ntasks-per-node=1
 #SBATCH --mem=128G
