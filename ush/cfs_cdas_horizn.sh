@@ -58,7 +58,7 @@ for hr in 0
 do
 export fchr=$hr
 export fdhr=0.5
-export dtg=`$EXECcfs/ndate $hr $date`
+export dtg=`$EXECcfs/ndate.x $hr $date`
 $USHcfs/cfs_horizn.sh $oname $nst $iall $imas $iwnd $fchr $fdhr $dtg $sfc
 done
 fi
@@ -75,7 +75,7 @@ for hr in 0
 do
 export fchr=$hr
 export fdhr=0.5
-export dtg=`$EXECcfs/ndate $hr $date`
+export dtg=`$EXECcfs/ndate.x $hr $date`
 $USHcfs/cfs_horizn.sh $oname $nst $iall $imas $iwnd $fchr $fdhr $dtg $sfc
 done
 fi
@@ -96,7 +96,7 @@ for hr in 0
 do
 export fchr=$hr
 export fdhr=4.0
-export dtg=`$EXECcfs/ndate $hr $date`
+export dtg=`$EXECcfs/ndate.x $hr $date`
 $USHcfs/cfs_horizn.sh $oname $nst $iall $imas $iwnd $fchr $fdhr $dtg $sfc
 done
 fi
@@ -113,7 +113,7 @@ for hr in 0
 do
 export fchr=$hr
 export fdhr=4.0
-export dtg=`$EXECcfs/ndate $hr $date`
+export dtg=`$EXECcfs/ndate.x $hr $date`
 $USHcfs/cfs_horizn.sh $oname $nst $iall $imas $iwnd $fchr $fdhr $dtg $sfc
 done
 fi
@@ -130,7 +130,7 @@ for hr in 0
 do
 export fchr=$hr
 export fdhr=4.0
-export dtg=`$EXECcfs/ndate $hr $date`
+export dtg=`$EXECcfs/ndate.x $hr $date`
 $USHcfs/cfs_horizn.sh $oname $nst $iall $imas $iwnd $fchr $fdhr $dtg $sfc
 done
 fi
