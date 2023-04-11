@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION 3.19)
 
+# Get the version from the VERSION file.
+file(STRINGS "VERSION" pVersion)
+
 project(fit2obs
-        VERSION 1.0.0
+        VERSION ${pVersion}
         LANGUAGES Fortran)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -60,5 +63,14 @@ endif()
 # Build and install code.
 add_subdirectory(sorc)
 
+# Install ex-scripts.
+add_subdirectory(scripts)
+
 # Install utility scripts.
 add_subdirectory(ush)
+
+# Install fix files.
+add_subdirectory(fix)
+
+# Install module file for this package.
+add_subdirectory(modulefiles)

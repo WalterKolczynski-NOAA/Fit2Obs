@@ -10,7 +10,8 @@ BUILD_TYPE=${BUILD_TYPE:-"Release"}
 CMAKE_OPTS=${CMAKE_OPTS:-}
 COMPILER=${COMPILER:-"intel"}
 BUILD_DIR=${BUILD_DIR:-"${DIR_ROOT}/build"}
-INSTALL_PREFIX=${INSTALL_PREFIX:-"${DIR_ROOT}"}
+INSTALL_PREFIX=${INSTALL_PREFIX:-"${DIR_ROOT}/install"}
+MODULEFILE_INSTALL_PREFIX=${MODULEFILE_INSTALL_PREFIX:-"${INSTALL_PREFIX}/modulefiles"}
 
 #==============================================================================#
 
@@ -28,6 +29,8 @@ CMAKE_OPTS+=" -DCMAKE_BUILD_TYPE=$BUILD_TYPE"
 
 # Install destination for built executables, libraries, CMake Package config
 CMAKE_OPTS+=" -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_INSTALL_BINDIR=exec"
+# Install destination for package modulefile
+CMAKE_OPTS+=" -DMODULEFILE_INSTALL_PREFIX=$MODULEFILE_INSTALL_PREFIX"
 
 # Re-use or create a new BUILD_DIR (Default: create new BUILD_DIR)
 [[ ${BUILD_CLEAN:-"YES"} =~ [yYtT] ]] && rm -rf $BUILD_DIR
@@ -39,5 +42,13 @@ cmake $CMAKE_OPTS $DIR_ROOT
 make -j ${BUILD_JOBS:-8} VERBOSE=${BUILD_VERBOSE:-}
 make install
 set +x
+
+[[ ${BUILD_LEGACY:-} =~ [yYtT] ]] || exit 0
+
+# Move executables from INSTALL_PREFIX to DIR_ROOT/exec as is legacy
+echo "Performing a legacy build where executables are placed alongside cloned source"
+mkdir -p $DIR_ROOT/exec
+cp -f $INSTALL_PREFIX/exec/* $DIR_ROOT/exec/
+rm -rf $INSTALL_PREFIX
 
 exit
