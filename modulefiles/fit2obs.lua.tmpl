@@ -16,6 +16,13 @@ setenv("FIXfit2obs", pathJoin(base, "fix"))
 setenv("SCRIPTSfit2obs", pathJoin(base, "scripts"))
 setenv("USHfit2obs", pathJoin(base, "ush"))
 
+-- retain cfs named variables till the scripts get updated.
+setenv("HOMEcfs", base)
+setenv("EXECcfs", pathJoin(base, "exec"))
+setenv("FIXcfs", pathJoin(base, "fix"))
+setenv("SCRIPTScfs", pathJoin(base, "scripts"))
+setenv("USHcfs", pathJoin(base, "ush"))
+
 whatis("Name: ".. pkgName)
 whatis("Version: " .. pkgVersion)
 whatis("Category: Utility")
