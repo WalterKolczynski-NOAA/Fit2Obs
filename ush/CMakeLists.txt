@@ -7,6 +7,7 @@ list(APPEND ush_files
     cfs_combfr.sh
     cfs_horizn.sh
     cfs_prevmpi.sh
+    runfits.sh
 )
 
 install(PROGRAMS ${ush_files}

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 set -euax
 
 exp=$1  CDATE=$2  COMROT=/dev/null
@@ -20,4 +22,4 @@ echo "echo err_chk">$DATA/err_chk; chmod 755 $DATA/err_chk
 echo "echo postmsg">$DATA/postmsg; chmod 755 $DATA/postmsg
 job=test
 
-$fitdir/excfs_gdas_vrfyfits.sh.ecf     
+$fitdir/scripts/excfs_gdas_vrfyfits.sh
